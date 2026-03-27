@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Governance Tool Landscape 2026 - Market Map | Delimit Docs</title>
+  <meta name="description" content="Comprehensive market map of API governance tools in 2026. Compare linting, breaking change detection, API design, testing, documentation, and gateway tools. See where Delimit fits.">
+  <meta name="keywords" content="api governance tools, openapi linting tools comparison, api change management tools, api breaking change detection, openapi diff tools">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/market-map/">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "API Governance Tool Landscape 2026 - Market Map",
+    "description": "Comprehensive market map of API governance tools. Compare linting, breaking change detection, design, testing, documentation, and gateway tools.",
+    "url": "https://delimit-ai.github.io/docs/market-map/",
+    "datePublished": "2026-03-27",
+    "author": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "publisher": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "about": {
+      "@type": "SoftwareApplication",
+      "name": "Delimit",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Cross-platform"
+    }
+  }</script>
+  <style>
+    .market-category {
+      margin: 2rem 0 1.5rem;
+    }
+    .market-category h3 {
+      font-size: 1.1rem;
+      color: var(--accent-light);
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .tool-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      transition: border-color 0.15s;
+    }
+    .tool-card:hover {
+      border-color: var(--accent);
+    }
+    .tool-card h4 {
+      font-size: 0.95rem;
+      color: var(--text);
+      text-transform: none;
+      letter-spacing: normal;
+      margin-bottom: 0.35rem;
+    }
+    .tool-card h4 a {
+      color: var(--accent-light);
+    }
+    .tool-card .tool-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+    .tool-meta {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .tool-tag {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .tool-tag.oss {
+      background: rgba(63, 185, 80, 0.15);
+      color: var(--green);
+      border: 1px solid rgba(63, 185, 80, 0.3);
+    }
+    .tool-tag.proprietary {
+      background: rgba(210, 153, 34, 0.15);
+      color: var(--yellow);
+      border: 1px solid rgba(210, 153, 34, 0.3);
+    }
+    .tool-tag.ci {
+      background: rgba(124, 58, 237, 0.15);
+      color: var(--accent-light);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+    }
+    .tool-tag.breaking {
+      background: rgba(248, 81, 73, 0.15);
+      color: var(--red);
+      border: 1px solid rgba(248, 81, 73, 0.3);
+    }
+    .comparison-table {
+      overflow-x: auto;
+      margin: 1.5rem 0;
+    }
+    .comparison-table table {
+      min-width: 700px;
+    }
+    .comparison-table td.yes {
+      color: var(--green);
+      font-weight: 600;
+    }
+    .comparison-table td.no {
+      color: var(--text-muted);
+    }
+    .comparison-table td.partial {
+      color: var(--yellow);
+    }
+    .comparison-table tr.highlight-row {
+      background: rgba(124, 58, 237, 0.08);
+    }
+    .comparison-table tr.highlight-row:hover {
+      background: rgba(124, 58, 237, 0.12);
+    }
+    .positioning-box {
+      background: var(--bg-secondary);
+      border: 1px solid var(--accent);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    .positioning-box h3 {
+      color: var(--accent-light);
+      margin-top: 0;
+      border: none;
+    }
+    @media (max-width: 768px) {
+      .tool-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+    <li><a href="/docs/templates/">Templates</a></li>
+    <li><a href="/docs/compare/">Compare</a></li>
+    <li><a href="/docs/patterns/">Patterns</a></li>
+    <li><a href="/docs/market-map/" class="active">Market Map</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    <div class="breadcrumb"><a href="/docs/">Docs</a> / Market Map</div>
+    <h1>API Governance Tool Landscape 2026</h1>
+    <p class="lead">A comprehensive market map of tools for linting, diffing, designing, testing, documenting, and managing APIs. Understand what each category does and where Delimit fits in the stack.</p>
+
+    <!-- Linting & Validation -->
+    <div class="market-category">
+      <h3>Linting &amp; Validation</h3>
+      <p>Tools that check a single OpenAPI spec for quality, consistency, and standards compliance. They answer: "Is this spec well-formed?" They do not compare two versions of a spec.</p>
+      <div class="tool-grid">
+        <div class="tool-card">
+          <h4><a href="https://github.com/stoplightio/spectral" target="_blank" rel="noopener">Spectral</a></h4>
+          <p class="tool-desc">Flexible JSON/YAML linter with custom rulesets. The de facto standard for OpenAPI linting.</p>
+          <div class="tool-meta">
+            <span class="tool-tag oss">Open Source</span>
+            <span class="tool-tag ci">CI/CD</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <h4><a href="https://redocly.com/docs/cli/" target="_blank" rel="noopener">Redocly CLI</a></h4>
+          <p class="tool-desc">Lint, bundle, and preview OpenAPI specs. Built-in rulesets with a polished developer experience.</p>
+          <div class="tool-meta">
+            <span class="tool-tag oss">Open Source</span>
+            <span class="tool-tag ci">CI/CD</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <h4><a href="https://github.com/daveshanley/vacuum" target="_blank" rel="noopener">Vacuum</a></h4>
+          <p class="tool-desc">High-performance OpenAPI linter written in Go. Spectral-compatible rulesets, significantly faster execution.</p>
+          <div class="tool-meta">
+            <span class="tool-tag oss">Open Source</span>
+            <span class="tool-tag ci">CI/CD</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <h4><a href="https://github.com/APIDevTools/swagger-cli" target="_blank" rel="noopener">swagger-cli</a></h4>
+          <p class="tool-desc">Validate and bundle Swagger/OpenAPI specs from the command line. Lightweight, focused on validation.</p>
+          <div class="tool-meta">
+            <span class="tool-tag oss">Open Source</span>
+            <span class="tool-tag ci">CI/CD</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Breaking Change Detection -->
+    <div class="market-category">
+      <h3>Breaking Change Detection</h3>
+      <p>Tools that compare two versions of an OpenAPI spec and identify what changed. They answer: "Will this update break existing API consumers?" This is Delimit's primary category.</p>
+      <div class="tool-grid">
+        <div class="tool-card" style="border-color: var(--accent);">
+          <h4><a href="https://delimit.ai" target="_blank" rel="noopener">Delimit</a></h4>
+          <p class="tool-desc">CI enforcement layer for API compatibility. 27 change types, policy presets, semver classification, migration guides, MCP server.</p>
+          <div class="tool-meta">
+            <span class="tool-tag oss">Open Source</span>
+            <span class="tool-tag ci">CI/CD</span>
+            <span class="tool-tag breaking">27 Change Types</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <h4><a href="https://github.com/Tufin/oasdiff" target="_blank" rel="noopener">OasDiff</a></h4>
+          <p class="tool-desc">OpenAPI diff and breaking change detection in Go. Outputs changelog, breaking changes, and flatten diffs.</p>
+          <div class="tool-meta">
+            <span class="tool-tag oss">Open Source</span>
+            <span class="tool-tag ci">CI/CD</span>
+            <span class="tool-tag breaking">Breaking Detection</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <h4><a href="https://www.useoptic.com/" target="_blank" rel="noopener">Optic</a></h4>
+          <p class="tool-desc">API platform with diff, governance, and documentation. Cloud-hosted with team collaboration features.</p>
+          <div class="tool-meta">
+            <span class="tool-tag proprietary">Proprietary</span>
+            <span class="tool-tag ci">CI/CD</span>
+            <span class="tool-tag breaking">Breaking Detection</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <h4><a href="https://bump.sh/" target="_blank" rel="noopener">Bump.sh</a></h4>
+          <p class="tool-desc">API documentation and change management platform. Visual diffs, changelogs, and hosted docs from OpenAPI specs.</p>
+          <div class="tool-meta">
+            <span class="tool-tag proprietary">Proprietary</span>
+            <span class="tool-tag ci">CI/CD</span>
+            <span class="tool-tag breaking">Breaking Detection</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Design -->
+    <div class="market-category">
+      <h3>API Design</h3>
+      <p>Visual editors and design-first platforms for authoring OpenAPI specs. They answer: "How do I build my API spec?" Delimit does not compete here.</p>
+      <div class="tool-grid">
+        <div class="tool-card">
+          <h4><a href="https://stoplight.io/studio" target="_blank" rel="noopener">Stoplight Studio</a></h4>
+          <p class="tool-desc">Visual OpenAPI editor with mocking, linting, and Git integration. Design-first API development.</p>
+          <div class="tool-meta">
+            <span class="tool-tag proprietary">Freemium</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <h4><a href="https://swagger.io/tools/swaggerhub/" target="_blank" rel="noopener">SwaggerHub</a></h4>
+          <p class="tool-desc">Collaborative API design platform from SmartBear. Team editing, version control, and code generation.</p>
+          <div class="tool-meta">
+            <span class="tool-tag proprietary">Proprietary</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <h4><a href="https://apidog.com/" target="_blank" rel="noopener">Apidog</a></h4>
+          <p class="tool-desc">All-in-one API platform combining design, documentation, debugging, mocking, and testing.</p>
+          <div class="tool-meta">
+            <span class="tool-tag proprietary">Freemium</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Testing -->
+    <div class="market-category">
+      <h3>API Testing</h3>
+      <p>Tools for sending requests, running test suites, and validating API behavior at runtime. They answer: "Does the live API work correctly?" Delimit works at the spec level, not the runtime level.</p>
+      <div class="tool-grid">
+        <div class="tool-card">
+          <h4><a href="https://www.postman.com/" target="_blank" rel="noopener">Postman</a></h4>
+          <p class="tool-desc">The most widely used API platform. Request builder, test runner, collections, team workspaces, and CI integration.</p>
+          <div class="tool-meta">
+            <span class="tool-tag proprietary">Freemium</span>
+            <span class="tool-tag ci">CI/CD</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <h4><a href="https://hoppscotch.io/" target="_blank" rel="noopener">Hoppscotch</a></h4>
+          <p class="tool-desc">Open source API development ecosystem. Lightweight Postman alternative with real-time collaboration.</p>
+          <div class="tool-meta">
+            <span class="tool-tag oss">Open Source</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <h4><a href="https://www.usebruno.com/" target="_blank" rel="noopener">Bruno</a></h4>
+          <p class="tool-desc">Offline-first, Git-friendly API client. Collections stored as plain files in your repo. No cloud account required.</p>
+          <div class="tool-meta">
+            <span class="tool-tag oss">Open Source</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Documentation -->
+    <div class="market-category">
+      <h3>Documentation</h3>
+      <p>Tools that render OpenAPI specs into human-readable API reference docs. They answer: "How do consumers read my API?" Delimit does not generate documentation.</p>
+      <div class="tool-grid">
+        <div class="tool-card">
+          <h4><a href="https://github.com/Redocly/redoc" target="_blank" rel="noopener">Redoc</a></h4>
+          <p class="tool-desc">Three-panel OpenAPI documentation renderer. Clean, responsive, and widely adopted for static API docs.</p>
+          <div class="tool-meta">
+            <span class="tool-tag oss">Open Source</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <h4><a href="https://github.com/swagger-api/swagger-ui" target="_blank" rel="noopener">Swagger UI</a></h4>
+          <p class="tool-desc">Interactive API documentation with a built-in request executor. The original OpenAPI doc renderer.</p>
+          <div class="tool-meta">
+            <span class="tool-tag oss">Open Source</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <h4><a href="https://readme.com/" target="_blank" rel="noopener">ReadMe</a></h4>
+          <p class="tool-desc">Developer hub platform with interactive docs, changelogs, guides, and API metrics. Enterprise-focused.</p>
+          <div class="tool-meta">
+            <span class="tool-tag proprietary">Proprietary</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gateway & Management -->
+    <div class="market-category">
+      <h3>Gateway &amp; Management</h3>
+      <p>Runtime API management platforms handling traffic routing, rate limiting, authentication, and analytics. They answer: "How do I manage API traffic in production?" Delimit operates pre-merge, not at runtime.</p>
+      <div class="tool-grid">
+        <div class="tool-card">
+          <h4><a href="https://konghq.com/" target="_blank" rel="noopener">Kong</a></h4>
+          <p class="tool-desc">Cloud-native API gateway and service mesh. Plugin ecosystem for auth, rate limiting, and observability.</p>
+          <div class="tool-meta">
+            <span class="tool-tag oss">Open Source Core</span>
+            <span class="tool-tag ci">CI/CD</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <h4><a href="https://tyk.io/" target="_blank" rel="noopener">Tyk</a></h4>
+          <p class="tool-desc">Open source API gateway with management dashboard, analytics, and developer portal.</p>
+          <div class="tool-meta">
+            <span class="tool-tag oss">Open Source Core</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <h4><a href="https://cloud.google.com/apigee" target="_blank" rel="noopener">Apigee</a></h4>
+          <p class="tool-desc">Google Cloud API management platform. Full lifecycle management, monetization, and enterprise governance.</p>
+          <div class="tool-meta">
+            <span class="tool-tag proprietary">Proprietary</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feature Comparison Table -->
+    <h2>Feature Comparison: Breaking Change Detection Tools</h2>
+    <p>A direct comparison of the four tools that detect breaking changes in OpenAPI specs.</p>
+
+    <div class="comparison-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Delimit</th>
+            <th>Spectral</th>
+            <th>OasDiff</th>
+            <th>Optic</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="highlight-row">
+            <td><strong>Change detection</strong></td>
+            <td class="yes">27 types (17 breaking, 10 non-breaking)</td>
+            <td class="no">No (lints single spec)</td>
+            <td class="yes">Yes (categorized)</td>
+            <td class="yes">Yes (categorized)</td>
+          </tr>
+          <tr>
+            <td><strong>Policy engine</strong></td>
+            <td class="yes">Presets + custom YAML + visual editor</td>
+            <td class="yes">Custom rulesets (.spectral.yml)</td>
+            <td class="partial">Basic severity levels</td>
+            <td class="yes">Governance rulesets</td>
+          </tr>
+          <tr class="highlight-row">
+            <td><strong>Semver classification</strong></td>
+            <td class="yes">MAJOR / MINOR / PATCH / NONE</td>
+            <td class="no">No</td>
+            <td class="no">No</td>
+            <td class="no">No</td>
+          </tr>
+          <tr>
+            <td><strong>Migration guides</strong></td>
+            <td class="yes">Auto-generated per change</td>
+            <td class="no">No</td>
+            <td class="no">No</td>
+            <td class="partial">Changelog only</td>
+          </tr>
+          <tr class="highlight-row">
+            <td><strong>PR comments</strong></td>
+            <td class="yes">Structured, per-change annotations</td>
+            <td class="partial">Via third-party Actions</td>
+            <td class="yes">GitHub Action output</td>
+            <td class="yes">Cloud-generated</td>
+          </tr>
+          <tr>
+            <td><strong>CLI</strong></td>
+            <td class="yes">npx delimit-cli</td>
+            <td class="yes">npx @stoplight/spectral-cli</td>
+            <td class="yes">oasdiff (Go binary)</td>
+            <td class="yes">optic (npm)</td>
+          </tr>
+          <tr class="highlight-row">
+            <td><strong>GitHub Action</strong></td>
+            <td class="yes">delimit-ai/delimit-action@v1</td>
+            <td class="yes">stoplightio/spectral-action</td>
+            <td class="yes">oasdiff/oasdiff-action</td>
+            <td class="yes">opticdev/action</td>
+          </tr>
+          <tr>
+            <td><strong>MCP server</strong></td>
+            <td class="yes">Built-in (106 tools)</td>
+            <td class="no">No</td>
+            <td class="no">No</td>
+            <td class="no">No</td>
+          </tr>
+          <tr class="highlight-row">
+            <td><strong>Cross-model context</strong></td>
+            <td class="yes">Claude, Codex, Gemini CLI</td>
+            <td class="no">No</td>
+            <td class="no">No</td>
+            <td class="no">No</td>
+          </tr>
+          <tr>
+            <td><strong>Account required</strong></td>
+            <td class="yes">No</td>
+            <td class="yes">No</td>
+            <td class="yes">No</td>
+            <td class="no">Yes (cloud)</td>
+          </tr>
+          <tr class="highlight-row">
+            <td><strong>Data egress</strong></td>
+            <td class="yes">None (runs locally)</td>
+            <td class="yes">None (runs locally)</td>
+            <td class="yes">None (runs locally)</td>
+            <td class="no">Sends to cloud</td>
+          </tr>
+          <tr>
+            <td><strong>Price</strong></td>
+            <td>Free (open source)</td>
+            <td>Free (open source)</td>
+            <td>Free (open source)</td>
+            <td>Free tier, paid plans</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p><strong>Note:</strong> Spectral appears in this table because teams often evaluate it alongside diff tools. Spectral lints a single spec for quality &mdash; it does not compare two spec versions. Delimit and Spectral are complementary: use Spectral to enforce spec quality, use Delimit to enforce spec compatibility. See the <a href="/docs/compare/spectral.html">detailed comparison</a>.</p>
+
+    <!-- Where Delimit Fits -->
+    <h2>Where Delimit Fits</h2>
+
+    <div class="positioning-box">
+      <h3>Delimit is the CI enforcement layer for API compatibility</h3>
+      <p>Delimit sits between your OpenAPI spec and your merge button. It catches breaking changes before they reach production, enforces team policies on what changes are allowed, and gives every PR a deterministic pass/fail verdict with migration guidance.</p>
+    </div>
+
+    <h3>What Delimit replaces</h3>
+    <ul>
+      <li>Manual spec review for breaking changes</li>
+      <li>Undocumented "check the diff" processes</li>
+      <li>Post-deployment breaking change discovery</li>
+      <li>Ad-hoc semver bump decisions</li>
+    </ul>
+
+    <h3>What Delimit does not replace</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Tool category</th>
+          <th>Example</th>
+          <th>Why Delimit does not replace it</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Linter</td>
+          <td>Spectral, Redocly</td>
+          <td>Linters check spec quality against style rules. Delimit checks spec compatibility between versions. Run both.</td>
+        </tr>
+        <tr>
+          <td>Documentation</td>
+          <td>Redoc, Swagger UI</td>
+          <td>Delimit detects changes, not renders docs. Use a doc renderer to publish your API reference.</td>
+        </tr>
+        <tr>
+          <td>API testing</td>
+          <td>Postman, Bruno</td>
+          <td>Delimit works at the spec level. API testers validate runtime behavior against live endpoints.</td>
+        </tr>
+        <tr>
+          <td>Gateway</td>
+          <td>Kong, Tyk, Apigee</td>
+          <td>Gateways manage production traffic. Delimit operates pre-merge in CI. Different lifecycle stages.</td>
+        </tr>
+        <tr>
+          <td>Design editor</td>
+          <td>Stoplight Studio</td>
+          <td>Design tools help you author specs. Delimit validates changes to specs you have already written.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>The recommended stack</h3>
+    <p>A complete API governance pipeline uses tools from multiple categories. Here is one recommended combination:</p>
+    <ol>
+      <li><strong>Design</strong> &mdash; Author your OpenAPI spec in Stoplight Studio or your editor of choice.</li>
+      <li><strong>Lint</strong> &mdash; Run Spectral or Redocly CLI to enforce spec quality and naming conventions.</li>
+      <li><strong>Diff &amp; enforce</strong> &mdash; Run <code>delimit lint</code> in CI to catch breaking changes, enforce policies, and classify the semver impact.</li>
+      <li><strong>Document</strong> &mdash; Render your spec with Redoc or Swagger UI for consumer-facing reference docs.</li>
+      <li><strong>Test</strong> &mdash; Use Postman or Bruno to validate that the live API matches the spec.</li>
+      <li><strong>Manage</strong> &mdash; Route production traffic through Kong, Tyk, or your gateway of choice.</li>
+    </ol>
+
+    <h2>Get Started</h2>
+    <pre><code>npx delimit-cli setup</code></pre>
+    <p>One command adds Delimit to any repo with an OpenAPI spec. No account, no API key, no configuration file required.</p>
+    <p>See the <a href="/docs/quickstart/">Quick Start guide</a> or the <a href="/docs/compare/">tool-by-tool comparisons</a> for more detail.</p>
+
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>
