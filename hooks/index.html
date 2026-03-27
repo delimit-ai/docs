@@ -61,6 +61,55 @@ npx delimit-cli pre-commit-check</code></pre>
     <pre><code>delimit activate
 # Adds ~/.delimit/shims to PATH via shell profile</code></pre>
 
+    <h2>Conditional Hooks (Claude Code)</h2>
+    <p>Claude Code supports an <code>if</code> field on hooks that lets Delimit fire governance checks only when they matter. This keeps hooks invisible during normal coding and active only when API specs are touched.</p>
+
+    <h3>PreToolUse: Lint only on spec edits</h3>
+    <p>This hook fires only when an Edit or Write targets an OpenAPI or Swagger file:</p>
+    <pre><code>{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "type": "command",
+        "command": "npx delimit-cli hook pre-tool $TOOL_NAME",
+        "matcher": "Edit|Write",
+        "if": "Edit && (path_matches('**/openapi*') || path_matches('**/swagger*') || path_matches('**/*.yaml') || path_matches('**/*.yml'))"
+      }
+    ]
+  }
+}</code></pre>
+
+    <h3>PreToolUse: Governance on commit/push</h3>
+    <p>This hook fires only when a Bash command contains <code>git commit</code> or <code>git push</code>:</p>
+    <pre><code>{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "type": "command",
+        "command": "npx delimit-cli hook pre-commit",
+        "matcher": "Bash",
+        "if": "Bash && (input_contains('git commit') || input_contains('git push'))"
+      }
+    ]
+  }
+}</code></pre>
+
+    <h3>SessionStart: No condition needed</h3>
+    <p>The session-start hook always fires to show governance status and ledger context:</p>
+    <pre><code>{
+  "hooks": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "npx delimit-cli hook session-start"
+      }
+    ]
+  }
+}</code></pre>
+
+    <h3>Automatic installation</h3>
+    <p>Running <code>delimit setup</code> or <code>delimit activate</code> installs these conditional hooks automatically. Existing hooks without <code>if</code> conditions are upgraded in place.</p>
+
     <h2>Cross-Model Compatibility</h2>
     <p>Hooks work the same way regardless of whether changes are made by:</p>
     <ul>
