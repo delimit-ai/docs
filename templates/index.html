@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Assistant Templates - Delimit Docs</title>
+  <meta name="description" content="CLAUDE.md governance templates for 10 popular API frameworks. Drop-in AI assistant configuration with Delimit API governance hooks.">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/templates/">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <style>
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0 2rem;
+    }
+    .template-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      transition: border-color 0.15s, transform 0.1s;
+    }
+    .template-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-1px);
+    }
+    .template-card h3 {
+      color: var(--accent-light);
+      margin: 0 0 0.25rem;
+      font-size: 1.05rem;
+    }
+    .template-card .lang {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      margin-bottom: 0.75rem;
+    }
+    .template-card p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin: 0 0 1rem;
+    }
+    .template-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: background 0.15s;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: var(--accent-light);
+      text-decoration: none;
+    }
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      text-decoration: none;
+    }
+    .copy-feedback {
+      color: var(--green);
+      font-size: 0.8rem;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .copy-feedback.show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+    <li><a href="/docs/templates/" class="active">Templates</a></li>
+    <li><a href="/docs/compare/">Compare</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    <div class="breadcrumb">
+      <a href="/docs/">Docs</a> / Templates
+    </div>
+
+    <h1>AI Assistant Templates</h1>
+    <p class="lead">Drop-in CLAUDE.md configuration templates with Delimit governance hooks for 10 popular API frameworks. Each template includes framework-specific instructions for route locations, spec generation, testing commands, and common breaking change patterns.</p>
+
+    <h2>How to Use</h2>
+    <ol>
+      <li>Download the template for your framework (or copy its contents).</li>
+      <li>Save it as <code>CLAUDE.md</code> in your project root.</li>
+      <li>Customize the framework-specific sections for your project structure.</li>
+      <li>AI assistants (Claude Code, Codex, Gemini CLI) will follow the governance rules automatically.</li>
+    </ol>
+
+    <h2>Templates</h2>
+
+    <div class="template-grid">
+
+      <div class="template-card" id="card-fastapi">
+        <h3>FastAPI</h3>
+        <div class="lang">Python</div>
+        <p>Auto-generated OpenAPI spec, Pydantic models, pytest testing. Includes export script and pre-commit hook.</p>
+        <div class="template-actions">
+          <a href="https://raw.githubusercontent.com/delimit-ai/docs/main/templates/fastapi.md" class="btn btn-primary" download="CLAUDE.md">Download</a>
+          <button class="btn btn-secondary" onclick="copyTemplate('fastapi')">Copy</button>
+          <span class="copy-feedback" id="fb-fastapi">Copied!</span>
+        </div>
+      </div>
+
+      <div class="template-card" id="card-express">
+        <h3>Express</h3>
+        <div class="lang">Node.js</div>
+        <p>swagger-jsdoc annotations, Router modules, Jest + Supertest. Includes Husky pre-commit setup.</p>
+        <div class="template-actions">
+          <a href="https://raw.githubusercontent.com/delimit-ai/docs/main/templates/express.md" class="btn btn-primary" download="CLAUDE.md">Download</a>
+          <button class="btn btn-secondary" onclick="copyTemplate('express')">Copy</button>
+          <span class="copy-feedback" id="fb-express">Copied!</span>
+        </div>
+      </div>
+
+      <div class="template-card" id="card-nestjs">
+        <h3>NestJS</h3>
+        <div class="lang">Node.js / TypeScript</div>
+        <p>@nestjs/swagger decorators, DTOs with class-validator, Jest testing. First-class OpenAPI support.</p>
+        <div class="template-actions">
+          <a href="https://raw.githubusercontent.com/delimit-ai/docs/main/templates/nestjs.md" class="btn btn-primary" download="CLAUDE.md">Download</a>
+          <button class="btn btn-secondary" onclick="copyTemplate('nestjs')">Copy</button>
+          <span class="copy-feedback" id="fb-nestjs">Copied!</span>
+        </div>
+      </div>
+
+      <div class="template-card" id="card-drf">
+        <h3>Django REST Framework</h3>
+        <div class="lang">Python</div>
+        <p>drf-spectacular spec generation, ViewSets, serializers, pytest. Covers pagination and filter gotchas.</p>
+        <div class="template-actions">
+          <a href="https://raw.githubusercontent.com/delimit-ai/docs/main/templates/django-rest-framework.md" class="btn btn-primary" download="CLAUDE.md">Download</a>
+          <button class="btn btn-secondary" onclick="copyTemplate('django-rest-framework')">Copy</button>
+          <span class="copy-feedback" id="fb-django-rest-framework">Copied!</span>
+        </div>
+      </div>
+
+      <div class="template-card" id="card-rails">
+        <h3>Rails API</h3>
+        <div class="lang">Ruby</div>
+        <p>rswag and rspec-openapi generation, RSpec request specs, serializers. Covers route resource gotchas.</p>
+        <div class="template-actions">
+          <a href="https://raw.githubusercontent.com/delimit-ai/docs/main/templates/rails-api.md" class="btn btn-primary" download="CLAUDE.md">Download</a>
+          <button class="btn btn-secondary" onclick="copyTemplate('rails-api')">Copy</button>
+          <span class="copy-feedback" id="fb-rails-api">Copied!</span>
+        </div>
+      </div>
+
+      <div class="template-card" id="card-spring">
+        <h3>Spring Boot</h3>
+        <div class="lang">Java</div>
+        <p>springdoc-openapi with Maven plugin, @RestController annotations, JUnit + JaCoCo coverage.</p>
+        <div class="template-actions">
+          <a href="https://raw.githubusercontent.com/delimit-ai/docs/main/templates/spring-boot.md" class="btn btn-primary" download="CLAUDE.md">Download</a>
+          <button class="btn btn-secondary" onclick="copyTemplate('spring-boot')">Copy</button>
+          <span class="copy-feedback" id="fb-spring-boot">Copied!</span>
+        </div>
+      </div>
+
+      <div class="template-card" id="card-go">
+        <h3>Go (Gin/Echo)</h3>
+        <div class="lang">Go</div>
+        <p>swaggo/swag annotations, both Gin and Echo examples, go test with race detection and coverage.</p>
+        <div class="template-actions">
+          <a href="https://raw.githubusercontent.com/delimit-ai/docs/main/templates/go-gin-echo.md" class="btn btn-primary" download="CLAUDE.md">Download</a>
+          <button class="btn btn-secondary" onclick="copyTemplate('go-gin-echo')">Copy</button>
+          <span class="copy-feedback" id="fb-go-gin-echo">Copied!</span>
+        </div>
+      </div>
+
+      <div class="template-card" id="card-laravel">
+        <h3>Laravel</h3>
+        <div class="lang">PHP</div>
+        <p>l5-swagger and scramble generation, Form Requests, API Resources, PHPUnit testing.</p>
+        <div class="template-actions">
+          <a href="https://raw.githubusercontent.com/delimit-ai/docs/main/templates/laravel.md" class="btn btn-primary" download="CLAUDE.md">Download</a>
+          <button class="btn btn-secondary" onclick="copyTemplate('laravel')">Copy</button>
+          <span class="copy-feedback" id="fb-laravel">Copied!</span>
+        </div>
+      </div>
+
+      <div class="template-card" id="card-nextjs">
+        <h3>Next.js API Routes</h3>
+        <div class="lang">Node.js / TypeScript</div>
+        <p>App Router and Pages Router patterns, next-swagger-doc, ts-rest contracts, Vitest/Jest testing.</p>
+        <div class="template-actions">
+          <a href="https://raw.githubusercontent.com/delimit-ai/docs/main/templates/nextjs-api.md" class="btn btn-primary" download="CLAUDE.md">Download</a>
+          <button class="btn btn-secondary" onclick="copyTemplate('nextjs-api')">Copy</button>
+          <span class="copy-feedback" id="fb-nextjs-api">Copied!</span>
+        </div>
+      </div>
+
+      <div class="template-card" id="card-flask">
+        <h3>Flask</h3>
+        <div class="lang">Python</div>
+        <p>flask-smorest, apispec, and flask-openapi3 options. Blueprints, Marshmallow schemas, pytest testing.</p>
+        <div class="template-actions">
+          <a href="https://raw.githubusercontent.com/delimit-ai/docs/main/templates/flask.md" class="btn btn-primary" download="CLAUDE.md">Download</a>
+          <button class="btn btn-secondary" onclick="copyTemplate('flask')">Copy</button>
+          <span class="copy-feedback" id="fb-flask">Copied!</span>
+        </div>
+      </div>
+
+    </div>
+
+    <h2>What Each Template Includes</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Section</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Delimit Governance</td>
+          <td>Session start hooks, post-edit lint calls, pre-commit diagnostics</td>
+        </tr>
+        <tr>
+          <td>Tool Routing</td>
+          <td>MCP tool requirements for secrets, tasks, and memory (audit trail enforcement)</td>
+        </tr>
+        <tr>
+          <td>Project Structure</td>
+          <td>Standard directory layout for the framework</td>
+        </tr>
+        <tr>
+          <td>Route Locations</td>
+          <td>Where API routes are defined and how they map to paths</td>
+        </tr>
+        <tr>
+          <td>Spec Generation</td>
+          <td>How to generate/export the OpenAPI spec for that framework</td>
+        </tr>
+        <tr>
+          <td>Testing Commands</td>
+          <td>Framework-specific test runner commands with coverage</td>
+        </tr>
+        <tr>
+          <td>Breaking Change Patterns</td>
+          <td>Common code changes that produce breaking API changes</td>
+        </tr>
+        <tr>
+          <td>Pre-Commit Hook</td>
+          <td>Ready-to-use hook configuration for CI integration</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Customization</h2>
+    <p>Each template is a starting point. After downloading, you should:</p>
+    <ul>
+      <li>Update file paths to match your project structure</li>
+      <li>Add project-specific coding conventions and style rules</li>
+      <li>Configure the OpenAPI spec export for your setup</li>
+      <li>Add any additional Delimit MCP tools relevant to your workflow</li>
+    </ul>
+
+    <h2>Works With</h2>
+    <p>These templates are designed for <code>CLAUDE.md</code> but the governance patterns work with any AI coding assistant that reads project-level configuration:</p>
+    <ul>
+      <li><strong>Claude Code</strong> &mdash; reads CLAUDE.md natively</li>
+      <li><strong>OpenAI Codex</strong> &mdash; reads AGENTS.md (rename the file)</li>
+      <li><strong>Gemini CLI</strong> &mdash; reads GEMINI.md (rename the file)</li>
+      <li><strong>Cursor / Windsurf</strong> &mdash; reads .cursorrules / .windsurfrules</li>
+    </ul>
+  </main>
+
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+
+  <script>
+    const templateUrls = {
+      'fastapi': 'https://raw.githubusercontent.com/delimit-ai/docs/main/templates/fastapi.md',
+      'express': 'https://raw.githubusercontent.com/delimit-ai/docs/main/templates/express.md',
+      'nestjs': 'https://raw.githubusercontent.com/delimit-ai/docs/main/templates/nestjs.md',
+      'django-rest-framework': 'https://raw.githubusercontent.com/delimit-ai/docs/main/templates/django-rest-framework.md',
+      'rails-api': 'https://raw.githubusercontent.com/delimit-ai/docs/main/templates/rails-api.md',
+      'spring-boot': 'https://raw.githubusercontent.com/delimit-ai/docs/main/templates/spring-boot.md',
+      'go-gin-echo': 'https://raw.githubusercontent.com/delimit-ai/docs/main/templates/go-gin-echo.md',
+      'laravel': 'https://raw.githubusercontent.com/delimit-ai/docs/main/templates/laravel.md',
+      'nextjs-api': 'https://raw.githubusercontent.com/delimit-ai/docs/main/templates/nextjs-api.md',
+      'flask': 'https://raw.githubusercontent.com/delimit-ai/docs/main/templates/flask.md',
+    };
+
+    async function copyTemplate(name) {
+      try {
+        const response = await fetch(templateUrls[name]);
+        const text = await response.text();
+        await navigator.clipboard.writeText(text);
+        const feedback = document.getElementById('fb-' + name);
+        feedback.classList.add('show');
+        setTimeout(() => feedback.classList.remove('show'), 2000);
+      } catch (err) {
+        window.open(templateUrls[name], '_blank');
+      }
+    }
+  </script>
+</body>
+</html>
