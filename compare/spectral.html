@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delimit vs Spectral — API Governance Comparison</title>
+  <meta name="description" content="Compare Delimit and Spectral for OpenAPI governance. Spectral lints spec quality; Delimit diffs spec versions to detect breaking changes. See the full feature comparison.">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/compare/spectral.html">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Delimit vs Spectral — API Governance Comparison",
+    "description": "Compare Delimit and Spectral for OpenAPI governance. Spectral lints spec quality; Delimit diffs spec versions to detect breaking changes.",
+    "url": "https://delimit-ai.github.io/docs/compare/spectral.html",
+    "author": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "publisher": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "keywords": ["spectral alternative", "spectral vs", "openapi linter comparison", "openapi governance"]
+  }</script>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+    <li><a href="/docs/compare/" class="active">Compare</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    <div class="breadcrumb">
+      <a href="/docs/">Docs</a> / <a href="/docs/compare/">Compare</a> / Spectral
+    </div>
+
+    <h1>Delimit vs Spectral</h1>
+    <p class="lead">Spectral validates spec quality. Delimit validates spec compatibility. They solve different problems and work well together.</p>
+
+    <h2>What Spectral Does</h2>
+    <p>Spectral is an open-source linter from Stoplight. It analyzes a <strong>single</strong> OpenAPI spec and checks it against style rules: naming conventions, required descriptions, consistent casing, response structure patterns. It answers the question <em>"Is this spec well-written?"</em></p>
+    <p>Spectral does not compare two versions of a spec. It has no concept of "old" vs "new." It cannot tell you what changed between releases, whether a change is breaking, or what semver bump is needed.</p>
+
+    <h2>What Delimit Does</h2>
+    <p>Delimit compares <strong>two versions</strong> of an OpenAPI spec and detects what changed. It identifies 27 change types (17 breaking, 10 non-breaking), classifies each by severity, recommends a semver bump, and generates migration guides for consumers. It answers the question <em>"Will this change break existing API clients?"</em></p>
+
+    <h2>Complementary, Not Competing</h2>
+    <p>These tools address different stages of the API lifecycle:</p>
+    <ul>
+      <li><strong>Spectral</strong> &mdash; Run during spec authoring to enforce style and structure consistency.</li>
+      <li><strong>Delimit</strong> &mdash; Run in CI on pull requests to catch breaking changes before merge.</li>
+    </ul>
+    <p>Many teams run both. Spectral ensures every spec follows naming conventions. Delimit ensures no PR introduces an unintentional breaking change.</p>
+
+    <h2>Feature Comparison</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Spectral</th>
+          <th>Delimit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Spec linting (style, naming, structure)</td>
+          <td>Yes</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Version diff (old vs new)</td>
+          <td>No</td>
+          <td>Yes &mdash; 27 change types</td>
+        </tr>
+        <tr>
+          <td>Breaking change detection</td>
+          <td>No</td>
+          <td>Yes &mdash; 17 breaking types</td>
+        </tr>
+        <tr>
+          <td>Semver classification</td>
+          <td>No</td>
+          <td>Yes &mdash; MAJOR / MINOR / PATCH / NONE</td>
+        </tr>
+        <tr>
+          <td>Migration guide generation</td>
+          <td>No</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>Policy presets</td>
+          <td>Built-in rulesets</td>
+          <td>strict / default / relaxed + custom YAML</td>
+        </tr>
+        <tr>
+          <td>Per-path scoping</td>
+          <td>No</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>GitHub Action</td>
+          <td>Community actions</td>
+          <td>Official action (v1.6.0)</td>
+        </tr>
+        <tr>
+          <td>PR comments with severity badges</td>
+          <td>No</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>MCP server (AI assistant integration)</td>
+          <td>No</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>Custom rules</td>
+          <td>Yes &mdash; JS/TS functions</td>
+          <td>Yes &mdash; YAML policies</td>
+        </tr>
+        <tr>
+          <td>License</td>
+          <td>Apache 2.0</td>
+          <td>MIT</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>When to Use Both</h2>
+    <p>If your team already uses Spectral, adding Delimit takes one line in your CI workflow. Spectral catches style violations on every commit. Delimit catches compatibility violations on every PR that touches your API spec.</p>
+    <pre><code># .github/workflows/api-governance.yml
+- uses: stoplightio/spectral-action@v0.8.1    # Lint spec quality
+- uses: delimit-ai/delimit-action@v1           # Detect breaking changes</code></pre>
+
+    <h2>Get Started</h2>
+    <pre><code>npx delimit-cli setup</code></pre>
+    <p>Sets up Delimit in your repo in under a minute. Works alongside Spectral with no configuration overlap.</p>
+
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

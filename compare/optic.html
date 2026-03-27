@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delimit vs Optic — API Change Management Comparison</title>
+  <meta name="description" content="Compare Delimit and Optic for API change detection. Optic is a cloud platform requiring an account. Delimit runs entirely in CI with no external dependencies.">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/compare/optic.html">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Delimit vs Optic — API Change Management Comparison",
+    "description": "Compare Delimit and Optic for API change detection. Optic is a cloud platform requiring an account. Delimit runs entirely in CI with no external dependencies.",
+    "url": "https://delimit-ai.github.io/docs/compare/optic.html",
+    "author": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "publisher": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "keywords": ["optic alternative", "optic api", "api change detection", "api change management"]
+  }</script>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+    <li><a href="/docs/compare/" class="active">Compare</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    <div class="breadcrumb">
+      <a href="/docs/">Docs</a> / <a href="/docs/compare/">Compare</a> / Optic
+    </div>
+
+    <h1>Delimit vs Optic</h1>
+    <p class="lead">Optic is a full API lifecycle platform. Delimit is a focused CI enforcement tool. Choose based on what your team actually needs.</p>
+
+    <h2>What Optic Does</h2>
+    <p><a href="https://www.useoptic.com/">Optic</a> is a cloud-based API change management platform. It provides a web dashboard for reviewing API changes, tracking spec history, managing API standards, and collaborating on API design. It requires creating an account, connecting your repositories, and routing data through Optic's cloud service.</p>
+    <p>Optic is well-suited for teams that want a full platform for API lifecycle management with a visual interface and team collaboration features.</p>
+
+    <h2>What Delimit Does</h2>
+    <p>Delimit runs entirely in your CI pipeline. There is no external service, no API keys, no account to create, and no data leaving your infrastructure. It is a single-purpose tool: detect what changed in your OpenAPI spec, classify the severity, enforce your policy, and report the result on the PR.</p>
+    <ul>
+      <li><strong>No account required</strong> &mdash; Install with <code>npx</code> and run immediately.</li>
+      <li><strong>No cloud dependency</strong> &mdash; All analysis happens locally in CI.</li>
+      <li><strong>No data egress</strong> &mdash; Your specs never leave your infrastructure.</li>
+      <li><strong>MIT licensed</strong> &mdash; Fully open source, no vendor lock-in.</li>
+    </ul>
+
+    <h2>Different Trade-offs</h2>
+    <p>Optic gives you more: a dashboard, historical tracking, team collaboration, API style guides with a visual editor. Delimit gives you less surface area but zero operational overhead. The right choice depends on your team's needs:</p>
+    <ul>
+      <li><strong>Choose Optic</strong> if you need a full API management platform with a dashboard, team roles, and historical spec tracking.</li>
+      <li><strong>Choose Delimit</strong> if you want breaking change enforcement in CI without adding a new SaaS dependency to your stack.</li>
+    </ul>
+
+    <h2>Feature Comparison</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>Optic</th>
+          <th>Delimit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Breaking change detection</td>
+          <td>Yes</td>
+          <td>Yes &mdash; 17 breaking types</td>
+        </tr>
+        <tr>
+          <td>Non-breaking change detection</td>
+          <td>Yes</td>
+          <td>Yes &mdash; 10 non-breaking types</td>
+        </tr>
+        <tr>
+          <td>Semver classification</td>
+          <td>No</td>
+          <td>MAJOR / MINOR / PATCH / NONE</td>
+        </tr>
+        <tr>
+          <td>Policy presets</td>
+          <td>Custom rulesets</td>
+          <td>strict / default / relaxed + custom YAML</td>
+        </tr>
+        <tr>
+          <td>Per-path scoping</td>
+          <td>Yes</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>Migration guide generation</td>
+          <td>No</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>PR comments with severity badges</td>
+          <td>Yes</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>Web dashboard</td>
+          <td>Yes</td>
+          <td>No (CI-only)</td>
+        </tr>
+        <tr>
+          <td>Historical spec tracking</td>
+          <td>Yes</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Team collaboration</td>
+          <td>Yes</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Account required</td>
+          <td>Yes</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Cloud dependency</td>
+          <td>Yes</td>
+          <td>No &mdash; runs locally in CI</td>
+        </tr>
+        <tr>
+          <td>Data egress</td>
+          <td>Specs sent to Optic cloud</td>
+          <td>None &mdash; all local</td>
+        </tr>
+        <tr>
+          <td>GitHub Action</td>
+          <td>Yes</td>
+          <td>Yes (v1.6.0)</td>
+        </tr>
+        <tr>
+          <td>MCP server (AI assistant integration)</td>
+          <td>No</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>Installation</td>
+          <td>npm + account setup</td>
+          <td><code>npx delimit-cli</code></td>
+        </tr>
+        <tr>
+          <td>License</td>
+          <td>Source-available (BSL)</td>
+          <td>MIT</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Get Started</h2>
+    <pre><code>npx delimit-cli setup</code></pre>
+    <p>No account. No API key. No cloud service. Breaking change enforcement in CI in under a minute.</p>
+
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

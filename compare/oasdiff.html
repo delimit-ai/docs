@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delimit vs OasDiff — Breaking Change Detection Comparison</title>
+  <meta name="description" content="Compare Delimit and OasDiff for OpenAPI breaking change detection. Both diff specs — Delimit adds policy presets, semver classification, migration guides, and PR comments.">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/compare/oasdiff.html">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Delimit vs OasDiff — Breaking Change Detection Comparison",
+    "description": "Compare Delimit and OasDiff for OpenAPI breaking change detection. Both diff specs — Delimit adds policy presets, semver classification, migration guides, and PR comments.",
+    "url": "https://delimit-ai.github.io/docs/compare/oasdiff.html",
+    "author": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "publisher": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "keywords": ["oasdiff alternative", "oasdiff vs", "openapi diff tool", "breaking change detection"]
+  }</script>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+    <li><a href="/docs/compare/" class="active">Compare</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    <div class="breadcrumb">
+      <a href="/docs/">Docs</a> / <a href="/docs/compare/">Compare</a> / OasDiff
+    </div>
+
+    <h1>Delimit vs OasDiff</h1>
+    <p class="lead">Both tools diff OpenAPI specs. OasDiff gives you a binary pass/fail. Delimit gives you policy control, semver classification, and actionable PR feedback.</p>
+
+    <h2>What OasDiff Does</h2>
+    <p><a href="https://github.com/Tufin/oasdiff">OasDiff</a> is an excellent open-source tool for detecting breaking changes in OpenAPI specs. It is written in Go, distributed as a Docker image, and provides a binary pass/fail result in CI. It has a solid breaking change catalog and an active maintainer community.</p>
+
+    <h2>What Delimit Adds</h2>
+    <p>Delimit covers the same breaking change detection but layers on governance features that teams need as they scale:</p>
+    <ul>
+      <li><strong>Policy presets</strong> &mdash; Choose strict (all errors), default (balanced), or relaxed (warnings only) without writing config.</li>
+      <li><strong>Per-path scoping</strong> &mdash; Apply different policies to different API paths. Internal endpoints can be relaxed while public endpoints stay strict.</li>
+      <li><strong>Semver classification</strong> &mdash; Every diff result includes a deterministic MAJOR / MINOR / PATCH / NONE recommendation.</li>
+      <li><strong>Migration guide generation</strong> &mdash; Delimit generates consumer-facing migration notes explaining what changed and how to adapt.</li>
+      <li><strong>PR comments with severity badges</strong> &mdash; The GitHub Action posts structured comments with breaking/non-breaking badges directly on the pull request.</li>
+      <li><strong>MCP integration</strong> &mdash; Use Delimit inside Claude Code, Codex, and Gemini CLI via the MCP server.</li>
+    </ul>
+
+    <h2>The Ignore File Problem</h2>
+    <p>OasDiff uses an ignore file to suppress known intentional changes. As your API evolves, this file grows. Every intentional breaking change requires a manual entry. Over time, the ignore file becomes a maintenance burden and a source of drift between what the file says and what the team intended.</p>
+    <p>Delimit handles this with policy rules instead. You define which change types are errors, warnings, or ignored at the policy level. Intentional changes are handled by preset selection or per-path overrides, not by maintaining a growing exception list.</p>
+
+    <h2>Feature Comparison</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>OasDiff</th>
+          <th>Delimit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Breaking change detection</td>
+          <td>Yes</td>
+          <td>Yes &mdash; 17 breaking types</td>
+        </tr>
+        <tr>
+          <td>Non-breaking change detection</td>
+          <td>Limited</td>
+          <td>Yes &mdash; 10 non-breaking types</td>
+        </tr>
+        <tr>
+          <td>Total change types</td>
+          <td>~20</td>
+          <td>27 (deterministic)</td>
+        </tr>
+        <tr>
+          <td>Policy presets</td>
+          <td>No</td>
+          <td>strict / default / relaxed</td>
+        </tr>
+        <tr>
+          <td>Custom policy rules (YAML)</td>
+          <td>No</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>Per-path scoping</td>
+          <td>No</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>Semver classification</td>
+          <td>No</td>
+          <td>MAJOR / MINOR / PATCH / NONE</td>
+        </tr>
+        <tr>
+          <td>Migration guide generation</td>
+          <td>No</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>PR comments with severity badges</td>
+          <td>No</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>GitHub Action</td>
+          <td>Community action</td>
+          <td>Official action (v1.6.0)</td>
+        </tr>
+        <tr>
+          <td>MCP server (AI assistant integration)</td>
+          <td>No</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>Ignore file for exceptions</td>
+          <td>Yes (grows over time)</td>
+          <td>No &mdash; handled by policy rules</td>
+        </tr>
+        <tr>
+          <td>Installation</td>
+          <td>Docker / Go binary</td>
+          <td><code>npx delimit-cli</code></td>
+        </tr>
+        <tr>
+          <td>License</td>
+          <td>Apache 2.0</td>
+          <td>MIT</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Real-World Example</h2>
+    <p>Projects like <a href="https://github.com/calcom/cal.com">cal.com</a> use OasDiff to gate breaking changes in CI. Delimit provides the same gating with less configuration overhead. Switching from OasDiff to Delimit means replacing your Docker step with a single Action line and removing the ignore file.</p>
+
+    <h2>Get Started</h2>
+    <pre><code>npx delimit-cli setup</code></pre>
+    <p>One command. No Docker. No ignore file. Policy presets handle the rest.</p>
+
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

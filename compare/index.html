@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Compare Delimit — API Governance Tool Comparisons</title>
+  <meta name="description" content="See how Delimit compares to Spectral, OasDiff, and Optic for OpenAPI governance and breaking change detection.">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/compare/">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "Compare Delimit — API Governance Tool Comparisons",
+    "description": "See how Delimit compares to Spectral, OasDiff, and Optic for OpenAPI governance and breaking change detection.",
+    "url": "https://delimit-ai.github.io/docs/compare/",
+    "author": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "publisher": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"}
+  }</script>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+    <li><a href="/docs/compare/" class="active">Compare</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    <h1>Compare Delimit</h1>
+    <p class="lead">See how Delimit stacks up against other OpenAPI governance and diff tools. Each comparison covers what both tools do, where they differ, and when to use which.</p>
+
+    <div class="card-grid">
+      <a href="/docs/compare/spectral.html" class="card">
+        <h3>Delimit vs Spectral</h3>
+        <p>Spectral lints spec quality. Delimit diffs spec versions. They are complementary tools that solve different problems.</p>
+      </a>
+      <a href="/docs/compare/oasdiff.html" class="card">
+        <h3>Delimit vs OasDiff</h3>
+        <p>Both detect breaking changes. Delimit adds policy presets, semver classification, migration guides, and structured PR comments.</p>
+      </a>
+      <a href="/docs/compare/optic.html" class="card">
+        <h3>Delimit vs Optic</h3>
+        <p>Optic is a cloud API platform. Delimit runs entirely in CI with no account, no API keys, and no data egress.</p>
+      </a>
+    </div>
+
+    <h2>Why These Comparisons Exist</h2>
+    <p>Teams evaluating API governance tooling often search for alternatives to tools they already know. These pages provide honest, specific comparisons so you can decide what fits your workflow.</p>
+    <p>Delimit is not a replacement for every tool on this list. Spectral and Delimit are complementary. OasDiff and Delimit solve the same problem differently. Optic and Delimit target different levels of organizational complexity.</p>
+
+    <h2>What Makes Delimit Different</h2>
+    <ul>
+      <li><strong>27 change types</strong> &mdash; 17 breaking, 10 non-breaking, deterministic classification.</li>
+      <li><strong>Policy presets</strong> &mdash; strict, default, relaxed. No config file needed to start.</li>
+      <li><strong>Semver classification</strong> &mdash; Every diff result includes a MAJOR / MINOR / PATCH / NONE recommendation.</li>
+      <li><strong>Migration guides</strong> &mdash; Auto-generated notes for API consumers explaining what changed.</li>
+      <li><strong>MCP server</strong> &mdash; Works inside Claude Code, Codex, and Gemini CLI.</li>
+      <li><strong>One command setup</strong> &mdash; <code>npx delimit-cli setup</code></li>
+    </ul>
+
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>
