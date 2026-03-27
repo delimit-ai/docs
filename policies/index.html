@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Policy Configuration - Delimit Docs</title>
+  <meta name="description" content="Configure Delimit policies with presets (strict, default, relaxed) or custom YAML rules. Control which API changes block CI.">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/policies/">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/" class="active">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    
+    <h1>Policies</h1>
+    <p class="lead">Control what API changes are allowed, warned, or blocked with policy presets and custom YAML configuration.</p>
+
+    <h2>Policy Presets</h2>
+    <p>Delimit ships with three built-in presets:</p>
+
+    <h3>Strict</h3>
+    <p>All breaking changes are errors. Zero tolerance for API-breaking modifications.</p>
+    <pre><code>delimit init --preset strict</code></pre>
+
+    <h3>Default</h3>
+    <p>Balanced approach. Critical changes (endpoint removal, field removal) are errors. Other breaking changes are warnings.</p>
+    <pre><code>delimit init</code></pre>
+
+    <h3>Relaxed</h3>
+    <p>All breaking changes are warnings. Nothing blocks CI. Good for early-stage APIs.</p>
+    <pre><code>delimit init --preset relaxed</code></pre>
+
+    <h2>Custom Policy YAML</h2>
+    <p>Create <code>.delimit/policies.yml</code> for fine-grained control:</p>
+    <pre><code># .delimit/policies.yml
+rules:
+  no_endpoint_removal:
+    severity: error
+    message: "Endpoints must not be removed without deprecation"
+
+  no_field_removal:
+    severity: error
+    message: "Response fields must not be removed"
+
+  no_required_param_addition:
+    severity: error
+    message: "New required parameters break existing consumers"
+
+  warn_type_change:
+    severity: warning
+    message: "Type changes should be reviewed carefully"
+
+  no_enum_removal:
+    severity: warning
+    message: "Removing enum values may break consumers"</code></pre>
+
+    <h2>Policy Rules</h2>
+    <table>
+      <thead>
+        <tr><th>Rule</th><th>Maps to Change Type</th><th>Default Severity</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>no_endpoint_removal</code></td><td>endpoint_removed</td><td>error</td></tr>
+        <tr><td><code>no_method_removal</code></td><td>method_removed</td><td>error</td></tr>
+        <tr><td><code>no_required_param_addition</code></td><td>required_param_added</td><td>error</td></tr>
+        <tr><td><code>no_field_removal</code></td><td>field_removed</td><td>error</td></tr>
+        <tr><td><code>no_response_field_removal</code></td><td>field_removed (response context)</td><td>error</td></tr>
+        <tr><td><code>no_type_changes</code></td><td>type_changed</td><td>error</td></tr>
+        <tr><td><code>warn_type_change</code></td><td>type_changed</td><td>warning</td></tr>
+        <tr><td><code>no_enum_removal</code></td><td>enum_value_removed</td><td>warning</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Severity Levels</h2>
+    <ul>
+      <li><strong>error</strong> &mdash; Blocks CI in enforce mode. Shown as red in PR comments.</li>
+      <li><strong>warning</strong> &mdash; Shown in PR comments but does not block CI.</li>
+      <li><strong>info</strong> &mdash; Logged for awareness only.</li>
+    </ul>
+
+    <h2>Using with GitHub Action</h2>
+    <pre><code>- uses: delimit-ai/delimit-action@v1
+  with:
+    spec: openapi.yaml
+    mode: enforce
+    policy_file: .delimit/policies.yml</code></pre>
+
+    <h2>Using with CLI</h2>
+    <pre><code>delimit lint --old v1.yaml --new v2.yaml --policy .delimit/policies.yml</code></pre>
+    
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

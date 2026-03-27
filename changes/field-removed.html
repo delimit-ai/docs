@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>field_removed - Breaking API Change Detection - Delimit Docs</title>
+  <meta name="description" content="Detect field_removed changes in OpenAPI specs. A field has been removed from a schema (request body, response, or component). Consumers that read or write this field w">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/changes/field-removed.html">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "field_removed - API Change Detection", "description": "A field has been removed from a schema (request body, response, or component). Consumers that read or write this field will break.", "url": "https://delimit-ai.github.io/docs/changes/field-removed.html", "author": {"@type": "Organization", "name": "Delimit AI"}, "publisher": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"}, "keywords": "openapi field removed breaking change schema property deleted response body", "about": {"@type": "Thing", "name": "field_removed", "description": "A field has been removed from a schema (request body, response, or component). Consumers that read or write this field will break."}}</script>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/" class="active">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    
+    <div class="breadcrumb"><a href="/docs/changes/">Change Types</a> &raquo; field_removed</div>
+
+    <h1><code>field_removed</code></h1>
+    <div class="badge-row">
+      <span class="badge breaking">Breaking</span>
+      <span class="badge severity-high">Severity: high</span>
+    </div>
+
+    <p class="lead">A field has been removed from a schema (request body, response, or component). Consumers that read or write this field will break.</p>
+
+    <h2>Why Is This Breaking?</h2>
+    <p>Removing a field from a response breaks consumers that read it. Removing a field from a request body means consumers sending it will either get errors or have data silently dropped.</p>
+
+    <h2>Example</h2>
+    <div class="diff-container">
+      <div class="diff-panel">
+        <h4>Before</h4>
+        <pre><code>components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        legacy_role:
+          type: string</code></pre>
+      </div>
+      <div class="diff-panel">
+        <h4>After</h4>
+        <pre><code>components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        # legacy_role removed</code></pre>
+      </div>
+    </div>
+
+    <h2>How Delimit Detects It</h2>
+    <p>Delimit recursively compares object properties in schemas. A property present in the old spec's <code>properties</code> but absent in the new spec is flagged, especially if it was in the <code>required</code> array.</p>
+
+    <h2>Migration Guide</h2>
+    <p>1. Mark the field as <code>deprecated: true</code> before removing it.
+2. Continue returning the field with a null or default value.
+3. For response fields, add a sunset header indicating when the field will be removed.
+4. Provide a replacement field if applicable.</p>
+
+    <h2>Related Change Types</h2>
+    <ul>
+      <li><a href="/docs/changes/required-field-added.html"><code>required_field_added</code></a></li>
+      <li><a href="/docs/changes/optional-field-added.html"><code>optional_field_added</code></a></li>
+      <li><a href="/docs/changes/deprecated-added.html"><code>deprecated_added</code></a></li>
+    </ul>
+
+    <h2>Detect This Change</h2>
+    <pre><code>npx delimit-cli lint --old old-spec.yaml --new new-spec.yaml</code></pre>
+    <p>Or add the <a href="/docs/action/">GitHub Action</a> to catch this automatically on every pull request.</p>
+    
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

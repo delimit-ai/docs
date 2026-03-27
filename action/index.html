@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Action Setup - Delimit Docs</title>
+  <meta name="description" content="Add Delimit API governance to your GitHub CI pipeline. Catch breaking OpenAPI changes on every pull request with advisory or enforce mode.">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/action/">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/" class="active">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    
+    <h1>GitHub Action</h1>
+    <p class="lead">Add API governance to your CI pipeline with the Delimit GitHub Action.</p>
+
+    <h2>Installation</h2>
+    <p>Available on the <a href="https://github.com/marketplace/actions/delimit-api-governance" target="_blank">GitHub Marketplace</a>.</p>
+
+    <h2>Basic Setup</h2>
+    <p>Create <code>.github/workflows/api-governance.yml</code>:</p>
+    <pre><code>name: API Governance
+on:
+  pull_request:
+    paths: ["openapi.yaml"]
+
+jobs:
+  delimit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: delimit-ai/delimit-action@v1
+        with:
+          spec: openapi.yaml</code></pre>
+
+    <h2>Inputs</h2>
+    <table>
+      <thead>
+        <tr><th>Input</th><th>Description</th><th>Default</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>spec</code></td><td>Path to OpenAPI spec. Delimit auto-fetches the base branch version.</td><td><em>auto-detect</em></td></tr>
+        <tr><td><code>old_spec</code></td><td>Path to old/base spec (advanced mode).</td><td></td></tr>
+        <tr><td><code>new_spec</code></td><td>Path to new/changed spec (advanced mode).</td><td></td></tr>
+        <tr><td><code>mode</code></td><td><code>advisory</code> (comments only) or <code>enforce</code> (fail CI).</td><td><code>advisory</code></td></tr>
+        <tr><td><code>github_token</code></td><td>Token for PR comments.</td><td><code>${{ github.token }}</code></td></tr>
+        <tr><td><code>policy_file</code></td><td>Path to custom policy file.</td><td></td></tr>
+      </tbody>
+    </table>
+
+    <h2>Outputs</h2>
+    <table>
+      <thead>
+        <tr><th>Output</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>breaking_changes_detected</code></td><td><code>true</code> or <code>false</code></td></tr>
+        <tr><td><code>violations_count</code></td><td>Number of policy violations</td></tr>
+        <tr><td><code>semver_bump</code></td><td><code>major</code>, <code>minor</code>, <code>patch</code>, or <code>none</code></td></tr>
+        <tr><td><code>next_version</code></td><td>Computed next version string</td></tr>
+        <tr><td><code>report</code></td><td>Full JSON report of all changes</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Advisory vs Enforce Mode</h2>
+    <p><strong>Advisory mode</strong> (default): Delimit posts a PR comment with the diff report but does not block the merge. Good for initial adoption.</p>
+    <p><strong>Enforce mode</strong>: Delimit blocks the merge if breaking changes are detected. Use this once your team is comfortable with the governance workflow.</p>
+    <pre><code>- uses: delimit-ai/delimit-action@v1
+  with:
+    spec: openapi.yaml
+    mode: enforce</code></pre>
+
+    <h2>Advanced: Two-Spec Mode</h2>
+    <p>For monorepos or custom setups where you manage both spec files:</p>
+    <pre><code>- uses: delimit-ai/delimit-action@v1
+  with:
+    old_spec: specs/api-v1.yaml
+    new_spec: specs/api-v2.yaml
+    mode: enforce
+    policy_file: .delimit/policies.yml</code></pre>
+
+    <h2>Auto-Detection</h2>
+    <p>If no spec input is provided, Delimit searches for common spec file names: <code>openapi.yaml</code>, <code>openapi.yml</code>, <code>openapi.json</code>, <code>swagger.yaml</code>, etc. in the root and common subdirectories (<code>api/</code>, <code>docs/</code>, <code>spec/</code>).</p>
+
+    <h2>PR Comment</h2>
+    <p>Delimit automatically posts (and updates) a PR comment showing:</p>
+    <ul>
+      <li>Breaking changes with severity levels</li>
+      <li>Semver recommendation</li>
+      <li>Migration guide for each breaking change</li>
+      <li>Additive (non-breaking) changes</li>
+    </ul>
+    
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

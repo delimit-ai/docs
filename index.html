@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delimit Documentation - Delimit Docs</title>
+  <meta name="description" content="API governance for AI coding assistants. Detect 27 types of breaking changes in OpenAPI specs. CLI, GitHub Action, and MCP server.">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Delimit Documentation", "url": "https://delimit-ai.github.io/docs", "description": "API governance for AI coding assistants", "publisher": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"}}</script>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/" class="active">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    
+    <h1>Delimit Documentation</h1>
+    <p class="lead">API governance for AI coding assistants. Catch breaking changes before merge with deterministic diff analysis, policy enforcement, and semver classification.</p>
+
+    <div class="card-grid">
+      <a href="/docs/quickstart/" class="card">
+        <h3>Quick Start</h3>
+        <p>Get up and running in 5 minutes with the CLI or GitHub Action.</p>
+      </a>
+      <a href="/docs/cli/" class="card">
+        <h3>CLI Reference</h3>
+        <p>All commands: init, lint, diff, explain, doctor, setup, activate.</p>
+      </a>
+      <a href="/docs/action/" class="card">
+        <h3>GitHub Action</h3>
+        <p>Add API governance to your CI pipeline in one step.</p>
+      </a>
+      <a href="/docs/changes/" class="card">
+        <h3>27 Change Types</h3>
+        <p>Reference for every breaking and non-breaking change Delimit detects.</p>
+      </a>
+      <a href="/docs/policies/" class="card">
+        <h3>Policies</h3>
+        <p>Presets (strict, default, relaxed) and custom YAML policy configuration.</p>
+      </a>
+      <a href="/docs/mcp/" class="card">
+        <h3>MCP Server</h3>
+        <p>Use Delimit with Claude Code, Codex, and Gemini CLI via MCP.</p>
+      </a>
+    </div>
+
+    <h2>Install</h2>
+    <pre><code>npx delimit-cli setup</code></pre>
+    <p>Or install globally:</p>
+    <pre><code>npm install -g delimit-cli</code></pre>
+
+    <h2>What Delimit Does</h2>
+    <p>Delimit compares two versions of an OpenAPI specification and detects <strong>27 types of changes</strong> &mdash; 17 breaking and 10 non-breaking. It classifies changes by severity, recommends semver bumps, generates migration guides, and enforces custom policies.</p>
+
+    <h2>How It Works</h2>
+    <ol>
+      <li><strong>Diff</strong> &mdash; Compare old and new OpenAPI specs to find all changes.</li>
+      <li><strong>Classify</strong> &mdash; Each change is categorized as breaking or non-breaking with a severity level.</li>
+      <li><strong>Enforce</strong> &mdash; Apply policy presets or custom YAML rules to pass/fail the change.</li>
+      <li><strong>Report</strong> &mdash; Generate PR comments, CI annotations, and migration guides.</li>
+    </ol>
+
+    <h2>Integrations</h2>
+    <ul>
+      <li><a href="/docs/integrations/claude-code.html">Claude Code</a> &mdash; MCP integration for API governance in Claude.</li>
+      <li><a href="/docs/integrations/codex.html">OpenAI Codex</a> &mdash; MCP integration for Codex CLI.</li>
+      <li><a href="/docs/integrations/gemini-cli.html">Gemini CLI</a> &mdash; MCP integration for Google Gemini.</li>
+    </ul>
+    
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

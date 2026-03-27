@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>method_removed - Breaking API Change Detection - Delimit Docs</title>
+  <meta name="description" content="Detect method_removed changes in OpenAPI specs. An HTTP method (GET, POST, PUT, DELETE, PATCH, etc.) has been removed from an existing endpoint. Consumers using that me">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/changes/method-removed.html">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "method_removed - API Change Detection", "description": "An HTTP method (GET, POST, PUT, DELETE, PATCH, etc.) has been removed from an existing endpoint. Consumers using that method will receive 405 Method Not Allowed errors.", "url": "https://delimit-ai.github.io/docs/changes/method-removed.html", "author": {"@type": "Organization", "name": "Delimit AI"}, "publisher": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"}, "keywords": "openapi http method removed breaking change delete put post 405", "about": {"@type": "Thing", "name": "method_removed", "description": "An HTTP method (GET, POST, PUT, DELETE, PATCH, etc.) has been removed from an existing endpoint. Consumers using that method will receive 405 Method Not Allowed errors."}}</script>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/" class="active">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    
+    <div class="breadcrumb"><a href="/docs/changes/">Change Types</a> &raquo; method_removed</div>
+
+    <h1><code>method_removed</code></h1>
+    <div class="badge-row">
+      <span class="badge breaking">Breaking</span>
+      <span class="badge severity-high">Severity: high</span>
+    </div>
+
+    <p class="lead">An HTTP method (GET, POST, PUT, DELETE, PATCH, etc.) has been removed from an existing endpoint. Consumers using that method will receive 405 Method Not Allowed errors.</p>
+
+    <h2>Why Is This Breaking?</h2>
+    <p>Clients explicitly choose HTTP methods for their requests. Removing a method means any consumer relying on it will fail with a 405 error, even though the endpoint path still exists.</p>
+
+    <h2>Example</h2>
+    <div class="diff-container">
+      <div class="diff-panel">
+        <h4>Before</h4>
+        <pre><code>paths:
+  /users/{id}:
+    get:
+      summary: Get user
+    delete:
+      summary: Delete user</code></pre>
+      </div>
+      <div class="diff-panel">
+        <h4>After</h4>
+        <pre><code>paths:
+  /users/{id}:
+    get:
+      summary: Get user
+    # DELETE method removed</code></pre>
+      </div>
+    </div>
+
+    <h2>How Delimit Detects It</h2>
+    <p>Delimit iterates over each shared path and compares the HTTP methods (get, post, put, delete, patch, head, options). Any method present in the old spec but absent in the new spec triggers this change.</p>
+
+    <h2>Migration Guide</h2>
+    <p>1. Mark the method as <code>deprecated: true</code> before removal.
+2. Return <code>405 Method Not Allowed</code> with an <code>Allow</code> header listing valid methods.
+3. Document the alternative approach (e.g., soft-delete via PATCH).
+4. Give consumers time to migrate before removing the method.</p>
+
+    <h2>Related Change Types</h2>
+    <ul>
+      <li><a href="/docs/changes/endpoint-removed.html"><code>endpoint_removed</code></a></li>
+      <li><a href="/docs/changes/deprecated-added.html"><code>deprecated_added</code></a></li>
+    </ul>
+
+    <h2>Detect This Change</h2>
+    <pre><code>npx delimit-cli lint --old old-spec.yaml --new new-spec.yaml</code></pre>
+    <p>Or add the <a href="/docs/action/">GitHub Action</a> to catch this automatically on every pull request.</p>
+    
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

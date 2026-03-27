@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CLI Reference - Delimit Docs</title>
+  <meta name="description" content="Complete reference for Delimit CLI commands: init, lint, diff, explain, doctor, setup, activate. API governance from the command line.">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/cli/">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/" class="active">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    
+    <h1>CLI Reference</h1>
+    <p class="lead">All Delimit CLI commands and options.</p>
+
+    <h2>Installation</h2>
+    <pre><code># Run without installing
+npx delimit-cli [command]
+
+# Install globally
+npm install -g delimit-cli
+
+# Verify installation
+delimit --version</code></pre>
+
+    <h2>Commands</h2>
+
+    <h3><code>delimit init [--preset]</code></h3>
+    <p>Initialize Delimit in your project. Creates a <code>.delimit/</code> directory with default configuration.</p>
+    <pre><code># Use default preset
+delimit init
+
+# Use strict preset (all violations are errors)
+delimit init --preset strict
+
+# Use relaxed preset (all violations are warnings)
+delimit init --preset relaxed</code></pre>
+
+    <h3><code>delimit lint</code></h3>
+    <p>Lint two OpenAPI specs for breaking changes and policy violations. This is the primary CI command.</p>
+    <pre><code>delimit lint --old api/v1.yaml --new api/v2.yaml
+delimit lint --old api/v1.yaml --new api/v2.yaml --policy .delimit/policies.yml</code></pre>
+
+    <h3><code>delimit diff</code></h3>
+    <p>Pure diff between two specs. Lists all changes without applying policy rules.</p>
+    <pre><code>delimit diff --old api/v1.yaml --new api/v2.yaml</code></pre>
+
+    <h3><code>delimit explain</code></h3>
+    <p>Explain a specific change type or policy rule in detail.</p>
+    <pre><code>delimit explain endpoint_removed
+delimit explain no_type_changes</code></pre>
+
+    <h3><code>delimit doctor</code></h3>
+    <p>Diagnose your Delimit setup. Checks configuration, spec files, and policy validity.</p>
+    <pre><code>delimit doctor</code></pre>
+
+    <h3><code>delimit setup</code></h3>
+    <p>Interactive setup wizard. Configures Delimit for your project, installs hooks, and validates your spec.</p>
+    <pre><code>delimit setup</code></pre>
+
+    <h3><code>delimit activate</code></h3>
+    <p>Activate the governance layer. Installs pre-commit hooks and PATH shims for continuous governance.</p>
+    <pre><code>delimit activate</code></pre>
+
+    <h2>Global Options</h2>
+    <table>
+      <thead>
+        <tr><th>Option</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>--version</code></td><td>Show version number</td></tr>
+        <tr><td><code>--help</code></td><td>Show help for any command</td></tr>
+        <tr><td><code>--policy &lt;path&gt;</code></td><td>Path to custom policy YAML file</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Exit Codes</h2>
+    <table>
+      <thead>
+        <tr><th>Code</th><th>Meaning</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>0</code></td><td>No violations (or advisory mode)</td></tr>
+        <tr><td><code>1</code></td><td>Breaking changes detected (enforce mode)</td></tr>
+        <tr><td><code>2</code></td><td>Configuration or file error</td></tr>
+      </tbody>
+    </table>
+    
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

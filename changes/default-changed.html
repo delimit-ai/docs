@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>default_changed - Non-Breaking API Change Detection - Delimit Docs</title>
+  <meta name="description" content="Detect default_changed changes in OpenAPI specs. The default value of a parameter or field has changed. Consumers relying on the old default behavior will see different ">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/changes/default-changed.html">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "default_changed - API Change Detection", "description": "The default value of a parameter or field has changed. Consumers relying on the old default behavior will see different results.", "url": "https://delimit-ai.github.io/docs/changes/default-changed.html", "author": {"@type": "Organization", "name": "Delimit AI"}, "publisher": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"}, "keywords": "openapi default value changed non-breaking change parameter schema", "about": {"@type": "Thing", "name": "default_changed", "description": "The default value of a parameter or field has changed. Consumers relying on the old default behavior will see different results."}}</script>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/" class="active">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    
+    <div class="breadcrumb"><a href="/docs/changes/">Change Types</a> &raquo; default_changed</div>
+
+    <h1><code>default_changed</code></h1>
+    <div class="badge-row">
+      <span class="badge non-breaking">Non-Breaking</span>
+      <span class="badge severity-low">Severity: low</span>
+    </div>
+
+    <p class="lead">The default value of a parameter or field has changed. Consumers relying on the old default behavior will see different results.</p>
+
+    <h2>Why Is This Non-Breaking?</h2>
+    <p>Classified as non-breaking because consumers explicitly setting the value are unaffected. However, consumers relying on the default (by omitting the parameter) will experience behavior changes. Review carefully.</p>
+
+    <h2>Example</h2>
+    <div class="diff-container">
+      <div class="diff-panel">
+        <h4>Before</h4>
+        <pre><code>parameters:
+  - name: limit
+    in: query
+    schema:
+      type: integer
+      default: 20</code></pre>
+      </div>
+      <div class="diff-panel">
+        <h4>After</h4>
+        <pre><code>parameters:
+  - name: limit
+    in: query
+    schema:
+      type: integer
+      default: 50</code></pre>
+      </div>
+    </div>
+
+    <h2>How Delimit Detects It</h2>
+    <p>Delimit compares <code>default</code> values on parameters and schema properties. Any change in the default value is flagged as <code>default_changed</code>.</p>
+
+    <h2>Migration Guide</h2>
+    <p>1. Communicate the default value change to consumers.
+2. Consumers relying on the default should explicitly set the old value if they need the previous behavior.
+3. Update documentation to reflect the new default.
+4. Consider whether this warrants a MINOR version bump in your API.</p>
+
+    <h2>Related Change Types</h2>
+    <ul>
+      <li><a href="/docs/changes/type-changed.html"><code>type_changed</code></a></li>
+      <li><a href="/docs/changes/format-changed.html"><code>format_changed</code></a></li>
+    </ul>
+
+    <h2>Detect This Change</h2>
+    <pre><code>npx delimit-cli lint --old old-spec.yaml --new new-spec.yaml</code></pre>
+    <p>Or add the <a href="/docs/action/">GitHub Action</a> to catch this automatically on every pull request.</p>
+    
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

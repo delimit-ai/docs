@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quick Start - Delimit Docs</title>
+  <meta name="description" content="Get Delimit API governance running in under 5 minutes. CLI, GitHub Action, or MCP server setup.">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/quickstart/">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/" class="active">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    
+    <h1>Quick Start</h1>
+    <p class="lead">Get API governance running in under 5 minutes.</p>
+
+    <h2>Option 1: CLI (Local Development)</h2>
+    <pre><code># Install
+npx delimit-cli setup
+
+# Initialize in your project
+delimit init
+
+# Compare two specs
+delimit lint --old api/v1.yaml --new api/v2.yaml
+
+# Or diff without policy enforcement
+delimit diff --old api/v1.yaml --new api/v2.yaml</code></pre>
+
+    <h2>Option 2: GitHub Action (CI/CD)</h2>
+    <p>Add this to <code>.github/workflows/api-governance.yml</code>:</p>
+    <pre><code>name: API Governance
+on:
+  pull_request:
+    paths: ["openapi.yaml", "api/**"]
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: delimit-ai/delimit-action@v1
+        with:
+          spec: openapi.yaml
+          mode: advisory</code></pre>
+
+    <p>That's it. Delimit will automatically compare your OpenAPI spec against the base branch and comment on the PR with any breaking changes.</p>
+
+    <h2>Option 3: MCP Server (AI Assistants)</h2>
+    <pre><code># Add to your MCP config
+npx delimit-cli mcp</code></pre>
+    <p>See the <a href="/docs/mcp/">MCP setup guide</a> for Claude Code, Codex, and Gemini CLI configuration.</p>
+
+    <h2>What Happens Next</h2>
+    <ol>
+      <li>Delimit diffs your old and new OpenAPI specs.</li>
+      <li>It detects up to <a href="/docs/changes/">27 types of changes</a> (17 breaking, 10 non-breaking).</li>
+      <li>It applies your <a href="/docs/policies/">policy</a> (strict, default, or relaxed).</li>
+      <li>In CI, it posts a PR comment with a detailed report.</li>
+      <li>In enforce mode, it blocks the merge if breaking changes are found.</li>
+    </ol>
+
+    <h2>Next Steps</h2>
+    <ul>
+      <li><a href="/docs/cli/">CLI Reference</a> &mdash; All available commands and options</li>
+      <li><a href="/docs/action/">GitHub Action</a> &mdash; Advanced CI configuration</li>
+      <li><a href="/docs/policies/">Policies</a> &mdash; Customize what's allowed and what's blocked</li>
+      <li><a href="/docs/changes/">Change Types</a> &mdash; Reference for all 27 detectable changes</li>
+    </ul>
+    
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

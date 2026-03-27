@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>param_required_changed - Breaking API Change Detection - Delimit Docs</title>
+  <meta name="description" content="Detect param_required_changed changes in OpenAPI specs. A parameter has changed from optional to required. Existing clients that do not send this parameter will start receiving">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/changes/param-required-changed.html">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "param_required_changed - API Change Detection", "description": "A parameter has changed from optional to required. Existing clients that do not send this parameter will start receiving validation errors.", "url": "https://delimit-ai.github.io/docs/changes/param-required-changed.html", "author": {"@type": "Organization", "name": "Delimit AI"}, "publisher": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"}, "keywords": "openapi parameter optional required changed breaking change validation", "about": {"@type": "Thing", "name": "param_required_changed", "description": "A parameter has changed from optional to required. Existing clients that do not send this parameter will start receiving validation errors."}}</script>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/" class="active">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    
+    <div class="breadcrumb"><a href="/docs/changes/">Change Types</a> &raquo; param_required_changed</div>
+
+    <h1><code>param_required_changed</code></h1>
+    <div class="badge-row">
+      <span class="badge breaking">Breaking</span>
+      <span class="badge severity-high">Severity: high</span>
+    </div>
+
+    <p class="lead">A parameter has changed from optional to required. Existing clients that do not send this parameter will start receiving validation errors.</p>
+
+    <h2>Why Is This Breaking?</h2>
+    <p>Consumers that previously omitted this optional parameter will now receive 400 errors because the server requires it. This is functionally identical to adding a new required parameter for affected consumers.</p>
+
+    <h2>Example</h2>
+    <div class="diff-container">
+      <div class="diff-panel">
+        <h4>Before</h4>
+        <pre><code>parameters:
+  - name: api_version
+    in: header
+    required: false
+    schema:
+      type: string</code></pre>
+      </div>
+      <div class="diff-panel">
+        <h4>After</h4>
+        <pre><code>parameters:
+  - name: api_version
+    in: header
+    required: true
+    schema:
+      type: string</code></pre>
+      </div>
+    </div>
+
+    <h2>How Delimit Detects It</h2>
+    <p>Delimit compares the <code>required</code> flag on parameters that exist in both old and new specs. A change from <code>false</code> (or absent) to <code>true</code> is flagged.</p>
+
+    <h2>Migration Guide</h2>
+    <p>1. Instead of making it required, add a default value so existing requests work.
+2. If it must be required, provide a migration period where the server supplies a default.
+3. Communicate the change well in advance.
+4. Consider using API versioning to introduce the requirement.</p>
+
+    <h2>Related Change Types</h2>
+    <ul>
+      <li><a href="/docs/changes/required-param-added.html"><code>required_param_added</code></a></li>
+      <li><a href="/docs/changes/param-type-changed.html"><code>param_type_changed</code></a></li>
+      <li><a href="/docs/changes/param-removed.html"><code>param_removed</code></a></li>
+    </ul>
+
+    <h2>Detect This Change</h2>
+    <pre><code>npx delimit-cli lint --old old-spec.yaml --new new-spec.yaml</code></pre>
+    <p>Or add the <a href="/docs/action/">GitHub Action</a> to catch this automatically on every pull request.</p>
+    
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cross-Model Hooks - Delimit Docs</title>
+  <meta name="description" content="Delimit hooks provide API governance across all AI coding assistants. Pre-commit checks, secret detection, and audit trails.">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/hooks/">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/" class="active">Hooks</a></li>
+    <li><a href="/docs/changes/">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    
+    <h1>Cross-Model Hooks</h1>
+    <p class="lead">Delimit hooks provide governance that works across all AI coding assistants.</p>
+
+    <h2>What Are Hooks?</h2>
+    <p>Delimit hooks are governance checkpoints that trigger when code changes are made, regardless of which AI assistant or IDE is being used. They ensure consistent API governance across your entire team.</p>
+
+    <h2>Pre-Commit Hook</h2>
+    <p>The pre-commit hook runs Delimit checks before every commit:</p>
+    <pre><code># Install the hook
+delimit activate
+
+# Or manually add to .git/hooks/pre-commit
+npx delimit-cli pre-commit-check</code></pre>
+
+    <h2>What the Hook Checks</h2>
+    <ul>
+      <li>Secret detection (API keys, passwords, tokens in staged files)</li>
+      <li>OpenAPI spec validation (if specs are staged)</li>
+      <li>Policy compliance (if a policy file exists)</li>
+      <li>Evidence recording (audit trail in <code>~/.delimit/evidence/</code>)</li>
+    </ul>
+
+    <h2>PATH Shim Integration</h2>
+    <p>When activated, Delimit adds a shim layer to your PATH that provides continuous governance:</p>
+    <pre><code>delimit activate
+# Adds ~/.delimit/shims to PATH via shell profile</code></pre>
+
+    <h2>Cross-Model Compatibility</h2>
+    <p>Hooks work the same way regardless of whether changes are made by:</p>
+    <ul>
+      <li>Claude Code (via MCP or direct edits)</li>
+      <li>OpenAI Codex CLI</li>
+      <li>Google Gemini CLI</li>
+      <li>Manual editing in VS Code, Vim, etc.</li>
+    </ul>
+    <p>The governance layer operates at the git level, not the editor level, ensuring universal coverage.</p>
+    
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

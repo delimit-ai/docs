@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP Server Setup - Delimit Docs</title>
+  <meta name="description" content="Use Delimit with Claude Code, Codex, and Gemini CLI via the Model Context Protocol. API governance in your AI coding assistant.">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/mcp/">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/" class="active">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    
+    <h1>MCP Server</h1>
+    <p class="lead">Use Delimit with AI coding assistants via the Model Context Protocol (MCP).</p>
+
+    <p>Delimit provides an MCP server that exposes API governance tools to any MCP-compatible AI assistant, including Claude Code, OpenAI Codex CLI, and Google Gemini CLI.</p>
+
+    <h2>Quick Setup</h2>
+    <pre><code>npx delimit-cli mcp</code></pre>
+
+    <h2>Available MCP Tools</h2>
+    <p>The Delimit MCP server exposes the following core tools:</p>
+    <table>
+      <thead>
+        <tr><th>Tool</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>delimit_lint</code></td><td>Lint two OpenAPI specs for breaking changes and policy violations.</td></tr>
+        <tr><td><code>delimit_diff</code></td><td>Pure diff between two specs. Lists all changes.</td></tr>
+        <tr><td><code>delimit_test_generate</code></td><td>Generate test skeletons from source code.</td></tr>
+        <tr><td><code>delimit_test_coverage</code></td><td>Analyze test coverage.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Integration Guides</h2>
+    <ul>
+      <li><a href="/docs/integrations/claude-code.html">Claude Code</a> &mdash; Full MCP setup for Claude Code</li>
+      <li><a href="/docs/integrations/codex.html">OpenAI Codex CLI</a> &mdash; MCP setup for Codex</li>
+      <li><a href="/docs/integrations/gemini-cli.html">Google Gemini CLI</a> &mdash; MCP setup for Gemini</li>
+    </ul>
+
+    <h2>Manual Configuration</h2>
+    <p>Add to your <code>.mcp.json</code> or equivalent config:</p>
+    <pre><code>{
+  "mcpServers": {
+    "delimit": {
+      "command": "npx",
+      "args": ["-y", "delimit-cli@latest", "mcp"]
+    }
+  }
+}</code></pre>
+
+    <h2>Usage Examples</h2>
+    <p>Once connected, ask your AI assistant:</p>
+    <ul>
+      <li>"Lint my OpenAPI spec for breaking changes"</li>
+      <li>"Compare my old and new API specs"</li>
+      <li>"What breaking changes are in this PR?"</li>
+      <li>"Generate tests for my API endpoints"</li>
+    </ul>
+    
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

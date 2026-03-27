@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code Integration - Delimit Docs</title>
+  <meta name="description" content="Set up Delimit API governance in Claude Code. MCP integration for breaking change detection in OpenAPI specs.">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/integrations/claude-code.html">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html" class="active">Integrations</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    
+    <div class="breadcrumb"><a href="/docs/mcp/">MCP Server</a> &raquo; Claude Code</div>
+
+    <h1>Claude Code Integration</h1>
+    <p class="lead">Set up Delimit API governance in Claude Code.</p>
+
+    <h2>Prerequisites</h2>
+    <ul>
+      <li>Claude Code installed and configured</li>
+      <li>Node.js 18+ installed</li>
+    </ul>
+
+    <h2>Configuration</h2>
+    <pre><code># Add to ~/.mcp.json or .mcp.json in your project
+{
+  &quot;mcpServers&quot;: {
+    &quot;delimit&quot;: {
+      &quot;command&quot;: &quot;npx&quot;,
+      &quot;args&quot;: [&quot;-y&quot;, &quot;delimit-cli@latest&quot;, &quot;mcp&quot;]
+    }
+  }
+}</code></pre>
+
+    <h2>Usage</h2>
+    <p>Once configured, you can ask Claude to:</p>
+    <ul>
+      <li>"Lint my OpenAPI spec for breaking changes"</li>
+      <li>"Compare the old and new API specs in this directory"</li>
+      <li>"What breaking changes are in my current changes?"</li>
+      <li>"Generate tests for my source files"</li>
+    </ul>
+
+    <h2>Claude Code Tips</h2><p>Claude Code automatically discovers MCP servers from <code>.mcp.json</code> in your project root or <code>~/.mcp.json</code> for global access. The Delimit tools will appear alongside Claude's built-in tools.</p>
+
+    <h2>Available Tools</h2>
+    <p>The Delimit MCP server provides these tools to Claude:</p>
+    <table>
+      <thead>
+        <tr><th>Tool</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>delimit_lint</code></td><td>Lint two OpenAPI specs for breaking changes and policy violations</td></tr>
+        <tr><td><code>delimit_diff</code></td><td>Diff two OpenAPI specs and list all changes</td></tr>
+        <tr><td><code>delimit_test_generate</code></td><td>Generate test skeletons for source code</td></tr>
+        <tr><td><code>delimit_test_coverage</code></td><td>Analyze test coverage</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Troubleshooting</h2>
+    <ul>
+      <li>Ensure <code>npx</code> is available in your PATH</li>
+      <li>Check that the MCP server starts without errors: <code>npx delimit-cli mcp</code></li>
+      <li>Verify your OpenAPI spec files are valid YAML or JSON</li>
+    </ul>
+    
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

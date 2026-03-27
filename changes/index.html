@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Change Types Reference - Delimit Docs</title>
+  <meta name="description" content="Complete reference for all 27 API change types Delimit detects. 17 breaking changes and 10 non-breaking changes with examples and migration guides.">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/changes/">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/" class="active">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    
+    <h1>API Change Types</h1>
+    <p class="lead">Delimit detects 27 types of API changes: 17 breaking and 10 non-breaking. Each change type has a dedicated reference page with examples, detection details, and migration guides.</p>
+
+    <h2>Breaking Changes (17)</h2>
+    <p>These changes will break existing API consumers and require a <strong>MAJOR</strong> semver bump.</p>
+    <table>
+      <thead>
+        <tr><th>Change Type</th><th>Severity</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><a href="/docs/changes/endpoint-removed.html"><code>endpoint_removed</code></a></td><td>high</td><td>An entire API endpoint (URL path) has been removed from the specification. All c...</td></tr>
+        <tr><td><a href="/docs/changes/method-removed.html"><code>method_removed</code></a></td><td>high</td><td>An HTTP method (GET, POST, PUT, DELETE, PATCH, etc.) has been removed from an ex...</td></tr>
+        <tr><td><a href="/docs/changes/required-param-added.html"><code>required_param_added</code></a></td><td>high</td><td>A new required parameter has been added to an existing operation. Existing clien...</td></tr>
+        <tr><td><a href="/docs/changes/param-removed.html"><code>param_removed</code></a></td><td>high</td><td>An existing parameter has been removed from an operation. Clients sending this p...</td></tr>
+        <tr><td><a href="/docs/changes/response-removed.html"><code>response_removed</code></a></td><td>high</td><td>A success response (2xx) has been removed from an operation. Clients expecting t...</td></tr>
+        <tr><td><a href="/docs/changes/required-field-added.html"><code>required_field_added</code></a></td><td>high</td><td>A new required field has been added to a request body schema. Existing clients t...</td></tr>
+        <tr><td><a href="/docs/changes/field-removed.html"><code>field_removed</code></a></td><td>high</td><td>A field has been removed from a schema (request body, response, or component). C...</td></tr>
+        <tr><td><a href="/docs/changes/type-changed.html"><code>type_changed</code></a></td><td>high</td><td>The data type of a field, parameter, or schema has changed (e.g., from <code>str...</td></tr>
+        <tr><td><a href="/docs/changes/format-changed.html"><code>format_changed</code></a></td><td>high</td><td>The format of a field has changed (e.g., from <code>date-time</code> to <code>da...</td></tr>
+        <tr><td><a href="/docs/changes/enum-value-removed.html"><code>enum_value_removed</code></a></td><td>high</td><td>A value has been removed from an enum list. Consumers sending the removed value ...</td></tr>
+        <tr><td><a href="/docs/changes/param-type-changed.html"><code>param_type_changed</code></a></td><td>high</td><td>The data type of a parameter has changed (e.g., query parameter changed from <co...</td></tr>
+        <tr><td><a href="/docs/changes/param-required-changed.html"><code>param_required_changed</code></a></td><td>high</td><td>A parameter has changed from optional to required. Existing clients that do not ...</td></tr>
+        <tr><td><a href="/docs/changes/response-type-changed.html"><code>response_type_changed</code></a></td><td>high</td><td>The type of a response schema has changed (e.g., from <code>object</code> to <co...</td></tr>
+        <tr><td><a href="/docs/changes/security-removed.html"><code>security_removed</code></a></td><td>high</td><td>A security scheme has been removed from the spec or from an operation. Consumers...</td></tr>
+        <tr><td><a href="/docs/changes/security-scope-removed.html"><code>security_scope_removed</code></a></td><td>high</td><td>An OAuth scope has been removed from a security requirement. Consumers whose tok...</td></tr>
+        <tr><td><a href="/docs/changes/max-length-decreased.html"><code>max_length_decreased</code></a></td><td>high</td><td>A <code>maxLength</code> or <code>maxItems</code> constraint has been decreased ...</td></tr>
+        <tr><td><a href="/docs/changes/min-length-increased.html"><code>min_length_increased</code></a></td><td>high</td><td>A <code>minLength</code> or <code>minItems</code> constraint has been increased ...</td></tr>
+
+      </tbody>
+    </table>
+
+    <h2>Non-Breaking Changes (10)</h2>
+    <p>These changes are safe for existing consumers. They may warrant a <strong>MINOR</strong> or <strong>PATCH</strong> semver bump.</p>
+    <table>
+      <thead>
+        <tr><th>Change Type</th><th>Severity</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><a href="/docs/changes/endpoint-added.html"><code>endpoint_added</code></a></td><td>low</td><td>A new endpoint has been added to the API. This is purely additive and does not a...</td></tr>
+        <tr><td><a href="/docs/changes/method-added.html"><code>method_added</code></a></td><td>low</td><td>A new HTTP method has been added to an existing endpoint. This is additive and d...</td></tr>
+        <tr><td><a href="/docs/changes/optional-param-added.html"><code>optional_param_added</code></a></td><td>low</td><td>A new optional parameter has been added to an operation. Existing clients will c...</td></tr>
+        <tr><td><a href="/docs/changes/response-added.html"><code>response_added</code></a></td><td>low</td><td>A new response status code has been added to an operation. This is additive and ...</td></tr>
+        <tr><td><a href="/docs/changes/optional-field-added.html"><code>optional_field_added</code></a></td><td>low</td><td>A new optional field has been added to a schema. Existing clients will continue ...</td></tr>
+        <tr><td><a href="/docs/changes/enum-value-added.html"><code>enum_value_added</code></a></td><td>low</td><td>A new value has been added to an enum list. Existing values continue to work. Co...</td></tr>
+        <tr><td><a href="/docs/changes/description-changed.html"><code>description_changed</code></a></td><td>low</td><td>A description field has been modified. This is a documentation-only change with ...</td></tr>
+        <tr><td><a href="/docs/changes/security-added.html"><code>security_added</code></a></td><td>low</td><td>A new security scheme has been added to the spec or to an operation. Existing au...</td></tr>
+        <tr><td><a href="/docs/changes/deprecated-added.html"><code>deprecated_added</code></a></td><td>low</td><td>An operation or field has been marked as <code>deprecated: true</code>. This sig...</td></tr>
+        <tr><td><a href="/docs/changes/default-changed.html"><code>default_changed</code></a></td><td>low</td><td>The default value of a parameter or field has changed. Consumers relying on the ...</td></tr>
+
+      </tbody>
+    </table>
+    
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

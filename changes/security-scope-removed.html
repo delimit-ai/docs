@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>security_scope_removed - Breaking API Change Detection - Delimit Docs</title>
+  <meta name="description" content="Detect security_scope_removed changes in OpenAPI specs. An OAuth scope has been removed from a security requirement. Consumers whose tokens include this scope may experience au">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/changes/security-scope-removed.html">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "security_scope_removed - API Change Detection", "description": "An OAuth scope has been removed from a security requirement. Consumers whose tokens include this scope may experience authorization changes.", "url": "https://delimit-ai.github.io/docs/changes/security-scope-removed.html", "author": {"@type": "Organization", "name": "Delimit AI"}, "publisher": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"}, "keywords": "openapi oauth scope removed breaking change authorization token permissions", "about": {"@type": "Thing", "name": "security_scope_removed", "description": "An OAuth scope has been removed from a security requirement. Consumers whose tokens include this scope may experience authorization changes."}}</script>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/" class="active">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    
+    <div class="breadcrumb"><a href="/docs/changes/">Change Types</a> &raquo; security_scope_removed</div>
+
+    <h1><code>security_scope_removed</code></h1>
+    <div class="badge-row">
+      <span class="badge breaking">Breaking</span>
+      <span class="badge severity-high">Severity: high</span>
+    </div>
+
+    <p class="lead">An OAuth scope has been removed from a security requirement. Consumers whose tokens include this scope may experience authorization changes.</p>
+
+    <h2>Why Is This Breaking?</h2>
+    <p>Removing an OAuth scope can change authorization behavior. Consumers may have tokens that were specifically granted this scope, and removing it from the spec may indicate the server no longer recognizes it.</p>
+
+    <h2>Example</h2>
+    <div class="diff-container">
+      <div class="diff-panel">
+        <h4>Before</h4>
+        <pre><code>security:
+  - OAuth2:
+    - read:users
+    - write:users
+    - admin:users</code></pre>
+      </div>
+      <div class="diff-panel">
+        <h4>After</h4>
+        <pre><code>security:
+  - OAuth2:
+    - read:users
+    - write:users
+    # admin:users scope removed</code></pre>
+      </div>
+    </div>
+
+    <h2>How Delimit Detects It</h2>
+    <p>Delimit compares the scope arrays within security requirements for each scheme. Scopes present in the old spec but absent in the new spec are flagged.</p>
+
+    <h2>Migration Guide</h2>
+    <p>1. Map the old scope to an equivalent new scope server-side.
+2. Continue accepting the old scope during a transition period.
+3. Notify consumers to request updated tokens.
+4. Update OAuth consent screens and documentation.</p>
+
+    <h2>Related Change Types</h2>
+    <ul>
+      <li><a href="/docs/changes/security-removed.html"><code>security_removed</code></a></li>
+      <li><a href="/docs/changes/security-added.html"><code>security_added</code></a></li>
+    </ul>
+
+    <h2>Detect This Change</h2>
+    <pre><code>npx delimit-cli lint --old old-spec.yaml --new new-spec.yaml</code></pre>
+    <p>Or add the <a href="/docs/action/">GitHub Action</a> to catch this automatically on every pull request.</p>
+    
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

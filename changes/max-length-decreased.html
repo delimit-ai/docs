@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>max_length_decreased - Breaking API Change Detection - Delimit Docs</title>
+  <meta name="description" content="Detect max_length_decreased changes in OpenAPI specs. A &lt;code&gt;maxLength&lt;/code&gt; or &lt;code&gt;maxItems&lt;/code&gt; constraint has been decreased or newly added. Values that were previou">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/changes/max-length-decreased.html">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "max_length_decreased - API Change Detection", "description": "A <code>maxLength</code> or <code>maxItems</code> constraint has been decreased or newly added. Values that were previously valid may now be rejected.", "url": "https://delimit-ai.github.io/docs/changes/max-length-decreased.html", "author": {"@type": "Organization", "name": "Delimit AI"}, "publisher": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"}, "keywords": "openapi maxLength decreased breaking change validation constraint maxItems limit", "about": {"@type": "Thing", "name": "max_length_decreased", "description": "A <code>maxLength</code> or <code>maxItems</code> constraint has been decreased or newly added. Values that were previously valid may now be rejected."}}</script>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/" class="active">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    
+    <div class="breadcrumb"><a href="/docs/changes/">Change Types</a> &raquo; max_length_decreased</div>
+
+    <h1><code>max_length_decreased</code></h1>
+    <div class="badge-row">
+      <span class="badge breaking">Breaking</span>
+      <span class="badge severity-high">Severity: high</span>
+    </div>
+
+    <p class="lead">A <code>maxLength</code> or <code>maxItems</code> constraint has been decreased or newly added. Values that were previously valid may now be rejected.</p>
+
+    <h2>Why Is This Breaking?</h2>
+    <p>Consumers sending values that fit within the old maximum but exceed the new maximum will have their requests rejected. This is especially problematic for stored data that was valid under the old constraint.</p>
+
+    <h2>Example</h2>
+    <div class="diff-container">
+      <div class="diff-panel">
+        <h4>Before</h4>
+        <pre><code>properties:
+  description:
+    type: string
+    maxLength: 1000</code></pre>
+      </div>
+      <div class="diff-panel">
+        <h4>After</h4>
+        <pre><code>properties:
+  description:
+    type: string
+    maxLength: 500</code></pre>
+      </div>
+    </div>
+
+    <h2>How Delimit Detects It</h2>
+    <p>Delimit compares <code>maxLength</code> and <code>maxItems</code> constraints. A decrease in value, or adding a max constraint where none existed, is flagged as breaking.</p>
+
+    <h2>Migration Guide</h2>
+    <p>1. Validate existing data against the new constraint before deploying.
+2. Truncate or migrate values that exceed the new maximum.
+3. Communicate the new limit to consumers before enforcing it.
+4. Consider a warning period where over-limit values are accepted but logged.</p>
+
+    <h2>Related Change Types</h2>
+    <ul>
+      <li><a href="/docs/changes/min-length-increased.html"><code>min_length_increased</code></a></li>
+      <li><a href="/docs/changes/type-changed.html"><code>type_changed</code></a></li>
+    </ul>
+
+    <h2>Detect This Change</h2>
+    <pre><code>npx delimit-cli lint --old old-spec.yaml --new new-spec.yaml</code></pre>
+    <p>Or add the <a href="/docs/action/">GitHub Action</a> to catch this automatically on every pull request.</p>
+    
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

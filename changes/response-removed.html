@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>response_removed - Breaking API Change Detection - Delimit Docs</title>
+  <meta name="description" content="Detect response_removed changes in OpenAPI specs. A success response (2xx) has been removed from an operation. Clients expecting this response status code will not handle">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/changes/response-removed.html">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "response_removed - API Change Detection", "description": "A success response (2xx) has been removed from an operation. Clients expecting this response status code will not handle the new response correctly.", "url": "https://delimit-ai.github.io/docs/changes/response-removed.html", "author": {"@type": "Organization", "name": "Delimit AI"}, "publisher": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"}, "keywords": "openapi response removed breaking change status code 2xx", "about": {"@type": "Thing", "name": "response_removed", "description": "A success response (2xx) has been removed from an operation. Clients expecting this response status code will not handle the new response correctly."}}</script>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/" class="active">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    
+    <div class="breadcrumb"><a href="/docs/changes/">Change Types</a> &raquo; response_removed</div>
+
+    <h1><code>response_removed</code></h1>
+    <div class="badge-row">
+      <span class="badge breaking">Breaking</span>
+      <span class="badge severity-high">Severity: high</span>
+    </div>
+
+    <p class="lead">A success response (2xx) has been removed from an operation. Clients expecting this response status code will not handle the new response correctly.</p>
+
+    <h2>Why Is This Breaking?</h2>
+    <p>Consumers build their error handling and response parsing around documented status codes. Removing a 2xx response means clients may not properly handle the new response, leading to incorrect application behavior.</p>
+
+    <h2>Example</h2>
+    <div class="diff-container">
+      <div class="diff-panel">
+        <h4>Before</h4>
+        <pre><code>responses:
+  &quot;200&quot;:
+    description: Success
+    content:
+      application/json:
+        schema:
+          $ref: &quot;#/components/schemas/User&quot;
+  &quot;204&quot;:
+    description: No content</code></pre>
+      </div>
+      <div class="diff-panel">
+        <h4>After</h4>
+        <pre><code>responses:
+  &quot;200&quot;:
+    description: Success
+    content:
+      application/json:
+        schema:
+          $ref: &quot;#/components/schemas/User&quot;
+  # 204 response removed</code></pre>
+      </div>
+    </div>
+
+    <h2>How Delimit Detects It</h2>
+    <p>Delimit compares response status codes for each operation. Only 2xx response removals are flagged as breaking since error response changes are generally non-breaking.</p>
+
+    <h2>Migration Guide</h2>
+    <p>1. Document the new response behavior clearly.
+2. If consolidating responses, ensure the remaining response covers all use cases.
+3. Communicate the change in advance so consumers can update their response handling.
+4. Consider versioning the API if the response semantics change significantly.</p>
+
+    <h2>Related Change Types</h2>
+    <ul>
+      <li><a href="/docs/changes/response-added.html"><code>response_added</code></a></li>
+      <li><a href="/docs/changes/endpoint-removed.html"><code>endpoint_removed</code></a></li>
+      <li><a href="/docs/changes/response-type-changed.html"><code>response_type_changed</code></a></li>
+    </ul>
+
+    <h2>Detect This Change</h2>
+    <pre><code>npx delimit-cli lint --old old-spec.yaml --new new-spec.yaml</code></pre>
+    <p>Or add the <a href="/docs/action/">GitHub Action</a> to catch this automatically on every pull request.</p>
+    
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

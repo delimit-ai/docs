@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>response_type_changed - Breaking API Change Detection - Delimit Docs</title>
+  <meta name="description" content="Detect response_type_changed changes in OpenAPI specs. The type of a response schema has changed (e.g., from &lt;code&gt;object&lt;/code&gt; to &lt;code&gt;array&lt;/code&gt;, or &lt;code&gt;string&lt;/code&gt; ">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/changes/response-type-changed.html">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "TechArticle", "headline": "response_type_changed - API Change Detection", "description": "The type of a response schema has changed (e.g., from <code>object</code> to <code>array</code>, or <code>string</code> to <code>integer</code>). All consumers parsing this response will break.", "url": "https://delimit-ai.github.io/docs/changes/response-type-changed.html", "author": {"@type": "Organization", "name": "Delimit AI"}, "publisher": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"}, "keywords": "openapi response type changed breaking change object array schema deserialization", "about": {"@type": "Thing", "name": "response_type_changed", "description": "The type of a response schema has changed (e.g., from <code>object</code> to <code>array</code>, or <code>string</code> to <code>integer</code>). All consumers parsing this response will break."}}</script>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/" class="active">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    
+    <div class="breadcrumb"><a href="/docs/changes/">Change Types</a> &raquo; response_type_changed</div>
+
+    <h1><code>response_type_changed</code></h1>
+    <div class="badge-row">
+      <span class="badge breaking">Breaking</span>
+      <span class="badge severity-high">Severity: high</span>
+    </div>
+
+    <p class="lead">The type of a response schema has changed (e.g., from <code>object</code> to <code>array</code>, or <code>string</code> to <code>integer</code>). All consumers parsing this response will break.</p>
+
+    <h2>Why Is This Breaking?</h2>
+    <p>Response type changes are the most impactful breaking changes for consumers. Every client that deserializes the response based on the old type will fail. This causes runtime errors in production.</p>
+
+    <h2>Example</h2>
+    <div class="diff-container">
+      <div class="diff-panel">
+        <h4>Before</h4>
+        <pre><code>responses:
+  &quot;200&quot;:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            users:
+              type: array</code></pre>
+      </div>
+      <div class="diff-panel">
+        <h4>After</h4>
+        <pre><code>responses:
+  &quot;200&quot;:
+    content:
+      application/json:
+        schema:
+          type: array
+          items:
+            $ref: &quot;#/components/schemas/User&quot;</code></pre>
+      </div>
+    </div>
+
+    <h2>How Delimit Detects It</h2>
+    <p>Delimit performs deep schema comparison on response bodies. When a type mismatch is found within a response context (identified by status code in the path), it emits <code>response_type_changed</code> in addition to the general <code>type_changed</code>.</p>
+
+    <h2>Migration Guide</h2>
+    <p>1. Never change response types in-place. Create a new endpoint version.
+2. If wrapping/unwrapping a response, keep the old format and add a new field.
+3. Use content negotiation (Accept header) to serve both formats.
+4. Provide SDK migration guides for each supported language.</p>
+
+    <h2>Related Change Types</h2>
+    <ul>
+      <li><a href="/docs/changes/type-changed.html"><code>type_changed</code></a></li>
+      <li><a href="/docs/changes/response-removed.html"><code>response_removed</code></a></li>
+      <li><a href="/docs/changes/field-removed.html"><code>field_removed</code></a></li>
+    </ul>
+
+    <h2>Detect This Change</h2>
+    <pre><code>npx delimit-cli lint --old old-spec.yaml --new new-spec.yaml</code></pre>
+    <p>Or add the <a href="/docs/action/">GitHub Action</a> to catch this automatically on every pull request.</p>
+    
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>
