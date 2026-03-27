@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenAPI Pagination Pattern — Cursor, Offset, and Keyset - Delimit Docs</title>
+  <meta name="description" content="OpenAPI pagination examples for cursor-based, offset-based, and keyset pagination. Pros and cons of each approach with breaking change detection.">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/patterns/pagination.html">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "OpenAPI Pagination Pattern — Cursor, Offset, and Keyset",
+    "description": "Production-ready OpenAPI pagination examples for cursor-based, offset-based, and keyset pagination with breaking change detection.",
+    "author": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "publisher": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "url": "https://delimit-ai.github.io/docs/patterns/pagination.html",
+    "keywords": "openapi pagination example, api pagination best practices, cursor pagination, offset pagination, keyset pagination"
+  }</script>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+    <li><a href="/docs/compare/">Compare</a></li>
+    <li><a href="/docs/templates/">Templates</a></li>
+    <li><a href="/docs/patterns/" class="active">Patterns</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    <div class="breadcrumb"><a href="/docs/">Docs</a> / <a href="/docs/patterns/">Patterns</a> / Pagination</div>
+
+    <h1>OpenAPI Pagination Pattern</h1>
+    <p class="lead">Cursor, offset, and keyset pagination in OpenAPI. Choose the right strategy, define it correctly in your spec, and let Delimit catch breaking changes automatically.</p>
+
+    <h2>1. Offset-Based Pagination</h2>
+    <p>The simplest approach. Clients pass <code>offset</code> and <code>limit</code> parameters. Common in SQL-backed APIs where <code>OFFSET</code> maps directly to a query clause.</p>
+
+    <pre><code># OpenAPI 3.0 — Offset Pagination
+paths:
+  /items:
+    get:
+      summary: List items with offset pagination
+      parameters:
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Number of items to skip
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Maximum number of items to return
+      responses:
+        '200':
+          description: Paginated list of items
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - total
+                  - offset
+                  - limit
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Item'
+                  total:
+                    type: integer
+                    description: Total number of items
+                  offset:
+                    type: integer
+                  limit:
+                    type: integer</code></pre>
+
+    <h2>2. Cursor-Based Pagination</h2>
+    <p>Clients pass an opaque <code>cursor</code> token to fetch the next page. Scales well for large datasets and real-time feeds where rows may be inserted between requests.</p>
+
+    <pre><code># OpenAPI 3.0 — Cursor Pagination
+paths:
+  /events:
+    get:
+      summary: List events with cursor pagination
+      parameters:
+        - name: cursor
+          in: query
+          schema:
+            type: string
+          description: Opaque cursor from previous response
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: Paginated list of events
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - next_cursor
+                  - has_more
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Event'
+                  next_cursor:
+                    type: string
+                    nullable: true
+                    description: Cursor for the next page, null if no more pages
+                  has_more:
+                    type: boolean
+                    description: Whether more pages exist</code></pre>
+
+    <h2>3. Keyset Pagination</h2>
+    <p>A variant of cursor pagination that uses a known sort key (like <code>created_at</code> or <code>id</code>) instead of an opaque token. Transparent and debuggable.</p>
+
+    <pre><code># OpenAPI 3.0 — Keyset Pagination
+paths:
+  /orders:
+    get:
+      summary: List orders with keyset pagination
+      parameters:
+        - name: after_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Return orders created after this ID
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [created_at, updated_at]
+            default: created_at
+      responses:
+        '200':
+          description: Paginated list of orders
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - data
+                  - has_more
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Order'
+                  has_more:
+                    type: boolean
+                  next_after_id:
+                    type: string
+                    format: uuid
+                    nullable: true</code></pre>
+
+    <h2>Comparison</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Criteria</th>
+          <th>Offset</th>
+          <th>Cursor</th>
+          <th>Keyset</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Simplicity</td>
+          <td>Simple, familiar</td>
+          <td>Moderate</td>
+          <td>Moderate</td>
+        </tr>
+        <tr>
+          <td>Performance at scale</td>
+          <td>Degrades with large offsets</td>
+          <td>Consistent O(1)</td>
+          <td>Consistent O(1)</td>
+        </tr>
+        <tr>
+          <td>Real-time stability</td>
+          <td>Skips or duplicates on inserts</td>
+          <td>Stable</td>
+          <td>Stable</td>
+        </tr>
+        <tr>
+          <td>Random page access</td>
+          <td>Yes (jump to any page)</td>
+          <td>No (sequential only)</td>
+          <td>No (sequential only)</td>
+        </tr>
+        <tr>
+          <td>Total count available</td>
+          <td>Yes (via <code>total</code>)</td>
+          <td>Usually no</td>
+          <td>Usually no</td>
+        </tr>
+        <tr>
+          <td>Debuggability</td>
+          <td>High</td>
+          <td>Low (opaque token)</td>
+          <td>High (visible key)</td>
+        </tr>
+        <tr>
+          <td>Best for</td>
+          <td>Small datasets, admin UIs</td>
+          <td>Feeds, event streams</td>
+          <td>Large ordered datasets</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Breaking Changes Delimit Catches</h2>
+    <p>Pagination fields are part of your API contract. Delimit detects these breaking changes automatically:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Change</th>
+          <th>Detection</th>
+          <th>Severity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Remove <code>cursor</code> or <code>next_cursor</code> field</td>
+          <td><a href="/docs/changes/field-removed.html">field-removed</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Remove <code>offset</code> or <code>limit</code> parameter</td>
+          <td><a href="/docs/changes/param-removed.html">param-removed</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Change <code>limit</code> max from 100 to 50</td>
+          <td><a href="/docs/changes/max-length-decreased.html">max-length-decreased</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Make <code>cursor</code> parameter required</td>
+          <td><a href="/docs/changes/param-required-changed.html">param-required-changed</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Remove <code>has_more</code> from response</td>
+          <td><a href="/docs/changes/field-removed.html">field-removed</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Add new optional parameter <code>page_token</code></td>
+          <td><a href="/docs/changes/optional-param-added.html">optional-param-added</a></td>
+          <td><span class="badge non-breaking">Non-breaking</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Enforce Pagination Patterns</h2>
+    <pre><code>npx delimit-cli setup</code></pre>
+    <p>Delimit protects your pagination contract on every pull request. <a href="/docs/quickstart/">Get started in 5 minutes</a>.</p>
+
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

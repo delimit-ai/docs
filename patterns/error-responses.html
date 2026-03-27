@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenAPI Error Response Pattern — RFC 7807 Problem Details - Delimit Docs</title>
+  <meta name="description" content="OpenAPI error response examples using RFC 7807 Problem Details. Standard error schema, common mistakes, and how Delimit catches error response breaking changes.">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/patterns/error-responses.html">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "OpenAPI Error Response Pattern — RFC 7807 Problem Details",
+    "description": "Standard error response pattern for OpenAPI using RFC 7807 Problem Details with breaking change detection.",
+    "author": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "publisher": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "url": "https://delimit-ai.github.io/docs/patterns/error-responses.html",
+    "keywords": "openapi error response example, api error handling pattern, RFC 7807, problem details"
+  }</script>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+    <li><a href="/docs/compare/">Compare</a></li>
+    <li><a href="/docs/templates/">Templates</a></li>
+    <li><a href="/docs/patterns/" class="active">Patterns</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    <div class="breadcrumb"><a href="/docs/">Docs</a> / <a href="/docs/patterns/">Patterns</a> / Error Responses</div>
+
+    <h1>OpenAPI Error Response Pattern</h1>
+    <p class="lead">Use RFC 7807 Problem Details for consistent, machine-readable error responses. Define them once in OpenAPI, reuse everywhere, and let Delimit protect the contract.</p>
+
+    <h2>RFC 7807 Problem Details Schema</h2>
+    <p>RFC 7807 (updated by RFC 9457) defines a standard JSON format for HTTP API error responses. It provides five core fields that every error should include.</p>
+
+    <pre><code># OpenAPI 3.0 — RFC 7807 Problem Details
+components:
+  schemas:
+    ProblemDetails:
+      type: object
+      required:
+        - type
+        - title
+        - status
+      properties:
+        type:
+          type: string
+          format: uri
+          description: URI reference identifying the problem type
+          example: "https://api.example.com/problems/insufficient-funds"
+        title:
+          type: string
+          description: Short human-readable summary
+          example: "Insufficient funds"
+        status:
+          type: integer
+          description: HTTP status code
+          example: 422
+        detail:
+          type: string
+          description: Human-readable explanation specific to this occurrence
+          example: "Account balance is $5.00 but transfer requires $10.00"
+        instance:
+          type: string
+          format: uri
+          description: URI reference identifying the specific occurrence
+          example: "/transfers/a]b3c4d5/errors/1"</code></pre>
+
+    <h2>Extending Problem Details</h2>
+    <p>RFC 7807 is designed to be extended. Add domain-specific fields alongside the standard ones.</p>
+
+    <pre><code># Extended error with validation details
+components:
+  schemas:
+    ValidationError:
+      allOf:
+        - $ref: '#/components/schemas/ProblemDetails'
+        - type: object
+          properties:
+            errors:
+              type: array
+              items:
+                type: object
+                required:
+                  - field
+                  - message
+                properties:
+                  field:
+                    type: string
+                    example: "email"
+                  message:
+                    type: string
+                    example: "must be a valid email address"
+                  code:
+                    type: string
+                    example: "invalid_format"</code></pre>
+
+    <h2>Using Error Schemas in Responses</h2>
+    <pre><code>paths:
+  /transfers:
+    post:
+      summary: Create a transfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransferRequest'
+      responses:
+        '201':
+          description: Transfer created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transfer'
+        '400':
+          description: Invalid request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+        '422':
+          description: Business rule violation
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'</code></pre>
+
+    <h2>Common Mistakes</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Mistake</th>
+          <th>Problem</th>
+          <th>Fix</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Different error formats per endpoint</td>
+          <td>Clients must handle multiple shapes</td>
+          <td>Use a shared <code>ProblemDetails</code> schema everywhere</td>
+        </tr>
+        <tr>
+          <td>Using <code>application/json</code> for errors</td>
+          <td>Clients cannot distinguish errors by content type</td>
+          <td>Use <code>application/problem+json</code></td>
+        </tr>
+        <tr>
+          <td>String-only error messages</td>
+          <td>Not machine-readable, hard to localize</td>
+          <td>Use structured <code>type</code> URIs and <code>code</code> fields</td>
+        </tr>
+        <tr>
+          <td>Missing <code>status</code> in body</td>
+          <td>Proxies may change HTTP status; body should be self-describing</td>
+          <td>Always include <code>status</code> in the response body</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Breaking Changes Delimit Catches</h2>
+    <p>Error responses are part of your API contract. Consumers depend on error schemas for retry logic, user-facing messages, and monitoring. Delimit detects:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Change</th>
+          <th>Detection</th>
+          <th>Severity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Remove <code>detail</code> field from error schema</td>
+          <td><a href="/docs/changes/field-removed.html">field-removed</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Remove <code>422</code> response entirely</td>
+          <td><a href="/docs/changes/response-removed.html">response-removed</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Change error <code>type</code> from string to integer</td>
+          <td><a href="/docs/changes/type-changed.html">type-changed</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Add required <code>trace_id</code> field to error schema</td>
+          <td><a href="/docs/changes/required-field-added.html">required-field-added</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Add new <code>429</code> response</td>
+          <td><a href="/docs/changes/response-added.html">response-added</a></td>
+          <td><span class="badge non-breaking">Non-breaking</span></td>
+        </tr>
+        <tr>
+          <td>Add optional <code>help_url</code> to error schema</td>
+          <td><a href="/docs/changes/optional-field-added.html">optional-field-added</a></td>
+          <td><span class="badge non-breaking">Non-breaking</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Enforce Error Response Patterns</h2>
+    <pre><code>npx delimit-cli setup</code></pre>
+    <p>Delimit protects your error contract on every pull request. <a href="/docs/quickstart/">Get started in 5 minutes</a>.</p>
+
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenAPI Filtering and Search Pattern - Delimit Docs</title>
+  <meta name="description" content="OpenAPI query parameter patterns for filtering, sorting, and search. Production-ready examples with breaking change detection for filter parameters.">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/patterns/filtering.html">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "OpenAPI Filtering and Search Pattern",
+    "description": "Query parameter patterns for filtering, sorting, and full-text search in OpenAPI with breaking change detection.",
+    "author": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "publisher": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "url": "https://delimit-ai.github.io/docs/patterns/filtering.html",
+    "keywords": "openapi query parameter filtering, api filter pattern, openapi search, api sorting pattern"
+  }</script>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+    <li><a href="/docs/compare/">Compare</a></li>
+    <li><a href="/docs/templates/">Templates</a></li>
+    <li><a href="/docs/patterns/" class="active">Patterns</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    <div class="breadcrumb"><a href="/docs/">Docs</a> / <a href="/docs/patterns/">Patterns</a> / Filtering &amp; Search</div>
+
+    <h1>OpenAPI Filtering and Search Pattern</h1>
+    <p class="lead">Query parameter patterns for filtering, sorting, and full-text search. Define them explicitly in your OpenAPI spec so consumers know exactly what is supported and Delimit can protect the contract.</p>
+
+    <h2>1. Field-Level Filtering</h2>
+    <p>Individual query parameters for each filterable field. The most explicit and self-documenting approach.</p>
+
+    <pre><code># OpenAPI 3.0 — Field-Level Filters
+paths:
+  /orders:
+    get:
+      summary: List orders with filters
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, processing, shipped, delivered, cancelled]
+          description: Filter by order status
+        - name: customer_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter by customer
+        - name: created_after
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Orders created after this timestamp
+        - name: created_before
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Orders created before this timestamp
+        - name: min_total
+          in: query
+          schema:
+            type: number
+            format: float
+            minimum: 0
+          description: Minimum order total
+        - name: max_total
+          in: query
+          schema:
+            type: number
+            format: float
+          description: Maximum order total
+      responses:
+        '200':
+          description: Filtered list of orders
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Order'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'</code></pre>
+
+    <h2>2. Sorting</h2>
+    <p>Use a <code>sort</code> parameter with defined allowed values. Support ascending and descending order with a prefix convention.</p>
+
+    <pre><code># OpenAPI 3.0 — Sorting
+parameters:
+  - name: sort
+    in: query
+    schema:
+      type: string
+      enum:
+        - created_at
+        - -created_at
+        - total
+        - -total
+        - status
+        - -status
+      default: -created_at
+    description: |
+      Sort field. Prefix with - for descending order.
+      Examples: "created_at" (ascending), "-created_at" (descending)
+  - name: sort_by
+    in: query
+    schema:
+      type: string
+      enum: [created_at, total, status, updated_at]
+    description: Field to sort by (alternative style)
+  - name: sort_order
+    in: query
+    schema:
+      type: string
+      enum: [asc, desc]
+      default: desc
+    description: Sort direction</code></pre>
+
+    <h2>3. Full-Text Search</h2>
+    <p>A <code>q</code> or <code>search</code> parameter for free-text queries. Keep it simple and document what fields are searched.</p>
+
+    <pre><code># OpenAPI 3.0 — Full-Text Search
+paths:
+  /products:
+    get:
+      summary: Search products
+      parameters:
+        - name: q
+          in: query
+          schema:
+            type: string
+            minLength: 2
+            maxLength: 200
+          description: |
+            Full-text search query. Searches across name,
+            description, and SKU fields.
+          example: "wireless headphones"
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum: [electronics, clothing, books, home]
+          description: Filter results by category
+        - name: in_stock
+          in: query
+          schema:
+            type: boolean
+          description: Only return items currently in stock
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Product'
+                  meta:
+                    type: object
+                    properties:
+                      total_results:
+                        type: integer
+                      query:
+                        type: string
+                      took_ms:
+                        type: integer
+                        description: Search execution time in milliseconds</code></pre>
+
+    <h2>4. Compound Filter Object</h2>
+    <p>For complex filtering, use a structured <code>filter</code> parameter with JSON encoding or bracket syntax.</p>
+
+    <pre><code># OpenAPI 3.0 — Structured Filter Parameter
+paths:
+  /events:
+    get:
+      summary: List events with compound filters
+      parameters:
+        - name: filter[type]
+          in: query
+          schema:
+            type: string
+            enum: [concert, conference, meetup, workshop]
+        - name: filter[city]
+          in: query
+          schema:
+            type: string
+        - name: filter[date_gte]
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Events on or after this date
+        - name: filter[date_lte]
+          in: query
+          schema:
+            type: string
+            format: date
+          description: Events on or before this date
+        - name: filter[tags]
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+          style: form
+          explode: true
+          description: Filter by tags (multiple allowed)
+      responses:
+        '200':
+          description: Filtered events</code></pre>
+
+    <h2>5. Field Selection (Sparse Fieldsets)</h2>
+    <p>Let clients request only the fields they need to reduce payload size.</p>
+
+    <pre><code># OpenAPI 3.0 — Field Selection
+parameters:
+  - name: fields
+    in: query
+    schema:
+      type: string
+    description: |
+      Comma-separated list of fields to include in response.
+      Example: "id,name,email,created_at"
+    example: "id,name,email"</code></pre>
+
+    <h2>Breaking Changes Delimit Catches</h2>
+    <p>Filter parameters are part of your API contract. Consumers build query logic around the available filters. Delimit detects:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Change</th>
+          <th>Detection</th>
+          <th>Severity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Remove <code>status</code> filter parameter</td>
+          <td><a href="/docs/changes/param-removed.html">param-removed</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Remove <code>shipped</code> from status enum</td>
+          <td><a href="/docs/changes/enum-value-removed.html">enum-value-removed</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Change <code>sort</code> type from string to array</td>
+          <td><a href="/docs/changes/param-type-changed.html">param-type-changed</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Make <code>q</code> parameter required</td>
+          <td><a href="/docs/changes/param-required-changed.html">param-required-changed</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Decrease <code>q</code> maxLength from 200 to 100</td>
+          <td><a href="/docs/changes/max-length-decreased.html">max-length-decreased</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Increase <code>q</code> minLength from 2 to 5</td>
+          <td><a href="/docs/changes/min-length-increased.html">min-length-increased</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Add new optional <code>region</code> filter</td>
+          <td><a href="/docs/changes/optional-param-added.html">optional-param-added</a></td>
+          <td><span class="badge non-breaking">Non-breaking</span></td>
+        </tr>
+        <tr>
+          <td>Add new enum value <code>returned</code> to status</td>
+          <td><a href="/docs/changes/enum-value-added.html">enum-value-added</a></td>
+          <td><span class="badge non-breaking">Non-breaking</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Enforce Filter Patterns</h2>
+    <pre><code>npx delimit-cli setup</code></pre>
+    <p>Delimit protects your filter contract on every pull request. <a href="/docs/quickstart/">Get started in 5 minutes</a>.</p>
+
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

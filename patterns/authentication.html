@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenAPI Authentication Patterns — API Key, OAuth2, JWT - Delimit Docs</title>
+  <meta name="description" content="OpenAPI security scheme examples for API key, OAuth2, and JWT bearer authentication. How Delimit detects auth-related breaking changes.">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/patterns/authentication.html">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "OpenAPI Authentication Patterns — API Key, OAuth2, JWT",
+    "description": "OpenAPI security scheme examples for API key, OAuth2, and JWT bearer authentication with breaking change detection.",
+    "author": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "publisher": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "url": "https://delimit-ai.github.io/docs/patterns/authentication.html",
+    "keywords": "openapi authentication example, api security scheme, oauth2 openapi, jwt bearer openapi"
+  }</script>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+    <li><a href="/docs/compare/">Compare</a></li>
+    <li><a href="/docs/templates/">Templates</a></li>
+    <li><a href="/docs/patterns/" class="active">Patterns</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    <div class="breadcrumb"><a href="/docs/">Docs</a> / <a href="/docs/patterns/">Patterns</a> / Authentication</div>
+
+    <h1>OpenAPI Authentication Patterns</h1>
+    <p class="lead">API key, OAuth2, and JWT bearer security schemes in OpenAPI. Define authentication once, apply globally or per-operation, and let Delimit catch auth breaking changes.</p>
+
+    <h2>1. API Key Authentication</h2>
+    <p>The simplest auth scheme. The key can be sent in a header, query parameter, or cookie. Header-based is most common.</p>
+
+    <pre><code># OpenAPI 3.0 — API Key in Header
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: API key provided in your dashboard
+
+# Apply globally to all endpoints
+security:
+  - ApiKeyAuth: []
+
+# Or apply per-operation
+paths:
+  /public/health:
+    get:
+      summary: Health check (no auth required)
+      security: []  # Override: no auth
+      responses:
+        '200':
+          description: OK
+  /users:
+    get:
+      summary: List users (requires API key)
+      # Inherits global ApiKeyAuth
+      responses:
+        '200':
+          description: List of users</code></pre>
+
+    <h2>2. OAuth2 Authentication</h2>
+    <p>Full OAuth2 flow definitions including authorization code, client credentials, and implicit grants. Define scopes to control granular access.</p>
+
+    <pre><code># OpenAPI 3.0 — OAuth2 with Scopes
+components:
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://auth.example.com/authorize
+          tokenUrl: https://auth.example.com/token
+          refreshUrl: https://auth.example.com/token
+          scopes:
+            read:users: Read user profiles
+            write:users: Create and update users
+            read:orders: Read order data
+            write:orders: Create and manage orders
+            admin: Full administrative access
+        clientCredentials:
+          tokenUrl: https://auth.example.com/token
+          scopes:
+            read:users: Read user profiles
+            read:orders: Read order data
+
+# Apply with required scopes
+paths:
+  /users:
+    get:
+      summary: List users
+      security:
+        - OAuth2: [read:users]
+      responses:
+        '200':
+          description: List of users
+    post:
+      summary: Create user
+      security:
+        - OAuth2: [write:users]
+      responses:
+        '201':
+          description: User created
+  /admin/settings:
+    put:
+      summary: Update system settings
+      security:
+        - OAuth2: [admin]
+      responses:
+        '200':
+          description: Settings updated</code></pre>
+
+    <h2>3. JWT Bearer Authentication</h2>
+    <p>Uses the HTTP bearer scheme with JWTs. Common for service-to-service communication and SPAs.</p>
+
+    <pre><code># OpenAPI 3.0 — JWT Bearer
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        JWT token obtained from /auth/token endpoint.
+        Include in Authorization header: Bearer &lt;token&gt;
+
+# Global application
+security:
+  - BearerAuth: []
+
+paths:
+  /auth/token:
+    post:
+      summary: Obtain JWT token
+      security: []  # No auth required to get a token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        '200':
+          description: JWT token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  token_type:
+                    type: string
+                    example: bearer
+                  expires_in:
+                    type: integer
+                    example: 3600
+                  refresh_token:
+                    type: string</code></pre>
+
+    <h2>4. Multiple Auth Schemes (AND / OR)</h2>
+    <p>OpenAPI supports combining auth schemes. Items in the same array element are AND; separate array elements are OR.</p>
+
+    <pre><code># AND: Require both API key AND OAuth2
+security:
+  - ApiKeyAuth: []
+    OAuth2: [read:users]
+
+# OR: Accept either API key OR Bearer token
+security:
+  - ApiKeyAuth: []
+  - BearerAuth: []</code></pre>
+
+    <h2>Breaking Changes Delimit Catches</h2>
+    <p>Authentication changes are among the most disruptive breaking changes. Every consumer must update their auth configuration. Delimit detects:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Change</th>
+          <th>Detection</th>
+          <th>Severity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Remove a security scheme entirely</td>
+          <td><a href="/docs/changes/security-removed.html">security-removed</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Remove an OAuth2 scope (<code>read:users</code>)</td>
+          <td><a href="/docs/changes/security-scope-removed.html">security-scope-removed</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Add auth requirement to a previously public endpoint</td>
+          <td><a href="/docs/changes/security-added.html">security-added</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Change API key header name from <code>X-API-Key</code> to <code>Authorization</code></td>
+          <td><a href="/docs/changes/security-removed.html">security-removed</a> + <a href="/docs/changes/security-added.html">security-added</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Add a new optional security scheme</td>
+          <td><a href="/docs/changes/security-added.html">security-added</a></td>
+          <td><span class="badge severity-medium">Context-dependent</span></td>
+        </tr>
+        <tr>
+          <td>Remove auth from an endpoint (make it public)</td>
+          <td><a href="/docs/changes/security-removed.html">security-removed</a></td>
+          <td><span class="badge severity-medium">Context-dependent</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Enforce Auth Policies</h2>
+    <pre><code>npx delimit-cli setup</code></pre>
+    <p>Delimit protects your auth contract on every pull request. <a href="/docs/quickstart/">Get started in 5 minutes</a>.</p>
+
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

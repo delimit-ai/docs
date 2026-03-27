@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Design Pattern Cookbook - Delimit Docs</title>
+  <meta name="description" content="OpenAPI design pattern cookbook. Production-ready examples for pagination, error responses, versioning, authentication, and filtering with governance best practices.">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/patterns/">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "API Design Pattern Cookbook",
+    "description": "OpenAPI design pattern cookbook with production-ready examples for pagination, error responses, versioning, authentication, and filtering.",
+    "author": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "publisher": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "url": "https://delimit-ai.github.io/docs/patterns/"
+  }</script>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+    <li><a href="/docs/compare/">Compare</a></li>
+    <li><a href="/docs/templates/">Templates</a></li>
+    <li><a href="/docs/patterns/" class="active">Patterns</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+
+    <h1>API Design Pattern Cookbook</h1>
+    <p class="lead">Production-ready OpenAPI patterns with governance best practices. Each pattern includes complete spec examples, trade-off analysis, and the breaking changes Delimit catches automatically.</p>
+
+    <div class="card-grid">
+      <a href="/docs/patterns/pagination.html" class="card">
+        <h3>Pagination</h3>
+        <p>Cursor, offset, and keyset pagination patterns. Pros, cons, and breaking change detection.</p>
+      </a>
+      <a href="/docs/patterns/error-responses.html" class="card">
+        <h3>Error Responses</h3>
+        <p>RFC 7807 Problem Details standard. Consistent error schemas across your API.</p>
+      </a>
+      <a href="/docs/patterns/versioning.html" class="card">
+        <h3>Versioning</h3>
+        <p>URL path, header, and query parameter versioning strategies with OpenAPI examples.</p>
+      </a>
+      <a href="/docs/patterns/authentication.html" class="card">
+        <h3>Authentication</h3>
+        <p>API key, OAuth2, and JWT bearer security schemes. Auth breaking change detection.</p>
+      </a>
+      <a href="/docs/patterns/filtering.html" class="card">
+        <h3>Filtering &amp; Search</h3>
+        <p>Query parameter patterns for filtering, sorting, and full-text search.</p>
+      </a>
+    </div>
+
+    <h2>Why Patterns Matter for API Governance</h2>
+    <p>Inconsistent API design creates brittle integrations. When every endpoint implements pagination differently or returns errors in different formats, consumers break on upgrade. These patterns give you a consistent foundation &mdash; and Delimit enforces that consistency automatically.</p>
+
+    <h2>How Delimit Protects These Patterns</h2>
+    <p>Each pattern page shows the specific breaking changes Delimit detects. For example:</p>
+    <ul>
+      <li>Removing a <code>cursor</code> field from a pagination response is a <strong>field-removed</strong> breaking change.</li>
+      <li>Changing an error response status code from <code>422</code> to <code>400</code> triggers a <strong>response-removed</strong> detection.</li>
+      <li>Removing a security scheme is a <strong>security-removed</strong> breaking change.</li>
+      <li>Removing a query filter parameter triggers <strong>param-removed</strong> detection.</li>
+    </ul>
+
+    <h2>Get Started</h2>
+    <pre><code>npx delimit-cli setup</code></pre>
+    <p>Delimit scans your OpenAPI specs and enforces these patterns from your first commit. <a href="/docs/quickstart/">See the Quick Start guide</a>.</p>
+
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>

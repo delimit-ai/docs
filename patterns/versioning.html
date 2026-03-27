@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Versioning in OpenAPI — URL, Header, and Query Parameter - Delimit Docs</title>
+  <meta name="description" content="Three API versioning strategies in OpenAPI: URL path, header, and query parameter versioning. Pros, cons, and how Delimit enforces version policies.">
+  <link rel="canonical" href="https://delimit-ai.github.io/docs/patterns/versioning.html">
+  <link rel="stylesheet" href="/docs/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f6e1;</text></svg>">
+  <script type="application/ld+json">{
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "API Versioning in OpenAPI — URL, Header, and Query Parameter",
+    "description": "Three API versioning strategies with OpenAPI examples. URL path, header, and query parameter versioning with governance enforcement.",
+    "author": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "publisher": {"@type": "Organization", "name": "Delimit AI", "url": "https://delimit.ai"},
+    "url": "https://delimit-ai.github.io/docs/patterns/versioning.html",
+    "keywords": "openapi api versioning, api versioning best practices, url versioning, header versioning"
+  }</script>
+</head>
+<body>
+  <nav class="sidebar">
+  <a href="/docs/" class="logo">Delimit</a>
+  <ul>
+    <li><a href="/docs/">Home</a></li>
+    <li><a href="/docs/quickstart/">Quick Start</a></li>
+    <li><a href="/docs/cli/">CLI Reference</a></li>
+    <li><a href="/docs/action/">GitHub Action</a></li>
+    <li><a href="/docs/mcp/">MCP Server</a></li>
+    <li><a href="/docs/policies/">Policies</a></li>
+    <li><a href="/docs/hooks/">Hooks</a></li>
+    <li><a href="/docs/changes/">Change Types</a></li>
+    <li><a href="/docs/integrations/claude-code.html">Integrations</a></li>
+    <li><a href="/docs/compare/">Compare</a></li>
+    <li><a href="/docs/templates/">Templates</a></li>
+    <li><a href="/docs/patterns/" class="active">Patterns</a></li>
+  </ul>
+  <div class="sidebar-footer">
+    <a href="https://github.com/delimit-ai/delimit-action" target="_blank">GitHub</a>
+    <a href="https://www.npmjs.com/package/delimit-cli" target="_blank">npm</a>
+    <a href="https://delimit.ai" target="_blank">delimit.ai</a>
+  </div>
+</nav>
+
+  <main>
+    <div class="breadcrumb"><a href="/docs/">Docs</a> / <a href="/docs/patterns/">Patterns</a> / Versioning</div>
+
+    <h1>API Versioning in OpenAPI</h1>
+    <p class="lead">URL path, header, and query parameter versioning strategies. Each approach has trade-offs for discoverability, caching, and maintenance. Delimit enforces version policies with path-scoped rules.</p>
+
+    <h2>1. URL Path Versioning</h2>
+    <p>The most common approach. The version is part of the URL path. Simple, visible, and cache-friendly.</p>
+
+    <pre><code># OpenAPI 3.0 — URL Path Versioning
+openapi: 3.0.3
+info:
+  title: Orders API
+  version: 2.0.0
+servers:
+  - url: https://api.example.com/v2
+paths:
+  /orders:
+    get:
+      summary: List orders
+      operationId: listOrdersV2
+      responses:
+        '200':
+          description: List of orders
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Order'
+  /orders/{id}:
+    get:
+      summary: Get order by ID
+      operationId: getOrderV2
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Order details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'</code></pre>
+
+    <h2>2. Header Versioning</h2>
+    <p>The version is specified via a custom request header. Keeps URLs clean but is less discoverable and harder to test in a browser.</p>
+
+    <pre><code># OpenAPI 3.0 — Header Versioning
+openapi: 3.0.3
+info:
+  title: Orders API
+  version: 2.0.0
+servers:
+  - url: https://api.example.com
+paths:
+  /orders:
+    get:
+      summary: List orders
+      operationId: listOrders
+      parameters:
+        - name: X-API-Version
+          in: header
+          required: false
+          schema:
+            type: string
+            enum: ['1', '2']
+            default: '2'
+          description: API version. Defaults to latest.
+        - name: Accept
+          in: header
+          required: false
+          schema:
+            type: string
+            default: application/vnd.example.v2+json
+          description: Content negotiation with version (alternative)
+      responses:
+        '200':
+          description: List of orders
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Order'</code></pre>
+
+    <h2>3. Query Parameter Versioning</h2>
+    <p>The version is a query parameter. Easy to use and test, but pollutes the query string and can conflict with caching.</p>
+
+    <pre><code># OpenAPI 3.0 — Query Parameter Versioning
+openapi: 3.0.3
+info:
+  title: Orders API
+  version: 2.0.0
+servers:
+  - url: https://api.example.com
+paths:
+  /orders:
+    get:
+      summary: List orders
+      operationId: listOrders
+      parameters:
+        - name: api_version
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: ['1', '2']
+            default: '2'
+          description: API version
+      responses:
+        '200':
+          description: List of orders
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Order'</code></pre>
+
+    <h2>Comparison</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Criteria</th>
+          <th>URL Path</th>
+          <th>Header</th>
+          <th>Query Param</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Discoverability</td>
+          <td>High (visible in URL)</td>
+          <td>Low (hidden in headers)</td>
+          <td>Medium</td>
+        </tr>
+        <tr>
+          <td>Cache-friendly</td>
+          <td>Yes (different URL per version)</td>
+          <td>Requires <code>Vary</code> header</td>
+          <td>Yes (different URL per version)</td>
+        </tr>
+        <tr>
+          <td>Browser testable</td>
+          <td>Yes</td>
+          <td>No (needs tools)</td>
+          <td>Yes</td>
+        </tr>
+        <tr>
+          <td>URL cleanliness</td>
+          <td>Adds <code>/v2</code> prefix</td>
+          <td>Clean URLs</td>
+          <td>Adds <code>?api_version=2</code></td>
+        </tr>
+        <tr>
+          <td>Spec complexity</td>
+          <td>Separate spec per version</td>
+          <td>Single spec, conditional logic</td>
+          <td>Single spec, conditional logic</td>
+        </tr>
+        <tr>
+          <td>Used by</td>
+          <td>Stripe, GitHub, Twilio</td>
+          <td>Azure, GitHub (Accept header)</td>
+          <td>Google, Amazon</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>How Delimit Enforces Version Policies</h2>
+    <p>Delimit supports path-scoped policy rules, so you can enforce different policies per API version. This is especially powerful with URL path versioning.</p>
+
+    <pre><code># .delimit/policies.yml — Version-scoped rules
+rules:
+  # Strict policy for stable v2 paths
+  - path: /v2/**
+    breaking_changes: error
+    deprecation_required: true
+
+  # Relaxed policy for beta v3 paths
+  - path: /v3/**
+    breaking_changes: warn
+    deprecation_required: false
+
+  # Block removal of versioned endpoints
+  - change: endpoint-removed
+    severity: error
+    message: "Endpoints must be deprecated before removal"</code></pre>
+
+    <p>Delimit detects version-related breaking changes:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Change</th>
+          <th>Detection</th>
+          <th>Severity</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Remove <code>/v1/orders</code> endpoint</td>
+          <td><a href="/docs/changes/endpoint-removed.html">endpoint-removed</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Remove version enum value from header</td>
+          <td><a href="/docs/changes/enum-value-removed.html">enum-value-removed</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Change version parameter from optional to required</td>
+          <td><a href="/docs/changes/param-required-changed.html">param-required-changed</a></td>
+          <td><span class="badge breaking">Breaking</span></td>
+        </tr>
+        <tr>
+          <td>Add new <code>/v3/orders</code> endpoint</td>
+          <td><a href="/docs/changes/endpoint-added.html">endpoint-added</a></td>
+          <td><span class="badge non-breaking">Non-breaking</span></td>
+        </tr>
+        <tr>
+          <td>Add deprecation notice to <code>/v1</code> endpoints</td>
+          <td><a href="/docs/changes/deprecated-added.html">deprecated-added</a></td>
+          <td><span class="badge non-breaking">Non-breaking</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>Enforce Version Policies</h2>
+    <pre><code>npx delimit-cli setup</code></pre>
+    <p>Delimit enforces version policies on every pull request. <a href="/docs/quickstart/">Get started in 5 minutes</a>.</p>
+
+  </main>
+  <footer>
+    <p>Delimit &mdash; API governance for AI coding assistants &middot;
+      <a href="https://delimit.ai">delimit.ai</a> &middot;
+      <a href="https://github.com/delimit-ai/delimit-action">GitHub</a> &middot;
+      <a href="https://www.npmjs.com/package/delimit-cli">npm</a>
+    </p>
+  </footer>
+</body>
+</html>
